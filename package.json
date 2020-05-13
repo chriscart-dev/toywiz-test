@@ -44,7 +44,10 @@
     "pace": "hubspot/pace",
     "slick-carousel": "1.5.5",
     "time-grunt": "^1.2.2",
-    "webpack": "^1.15.0"
+    "webpack": "~4.27.1",
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "~3.1.2",
+    "webpack-merge": "~4.1.2"
   },
   "dependencies": {
     "@babel/preset-react": "^7.9.4",
