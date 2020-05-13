@@ -1,0 +1,42 @@
+<div class="productsSort">
+	<span>Sort By:</span>
+	<select class="form-select form-select--small" name="sort" id="sort" onchange="{{#if forms.search.content_url}}searchSort(this.value);{{else}}this.form.submit();{{/if}}">
+		<option value="featured" {{#if sort '==' 'featured'}}selected{{/if}}>{{lang 'common.sorter.featured'}}</option>
+		{{#if settings.show_product_reviews}}
+		<option value="newest" {{#if sort '==' 'newest'}}selected{{/if}}>{{lang 'common.sorter.newest'}}</option>
+		{{/if}}
+		<option value="bestselling" {{#if sort '==' 'bestselling'}}selected{{/if}}>{{lang 'common.sorter.top_sellers'}}</option>
+		<option value="alphaasc" {{#if sort '==' 'alphaasc'}}selected{{/if}}>{{lang 'common.sorter.alpha_asc'}}</option>
+		<option value="alphadesc" {{#if sort '==' 'alphadesc'}}selected{{/if}}>{{lang 'common.sorter.alpha_desc'}}</option>
+		{{#if settings.show_product_reviews}}
+			<option value="avgcustomerreview" {{#if sort '==' 'avgcustomerreview'}}selected{{/if}}>{{lang 'common.sorter.reviews'}}</option>
+		{{/if}}            	
+		<option value="priceasc" {{#if sort '==' 'priceasc'}}selected{{/if}}>{{lang 'common.sorter.price_asc'}}</option>
+		<option value="pricedesc" {{#if sort '==' 'pricedesc'}}selected{{/if}}>{{lang 'common.sorter.price_desc'}}</option>
+		{{#if result_count}}
+			<option value="relevance" {{#if sort '==' 'relevance'}}selected{{/if}}>{{lang 'common.sorter.relevance'}}</option>
+		{{/if}}
+	</select>
+</div>
+{{#if forms.search.content_url}}
+<script>
+function searchSort(sort){
+	var theUrl = '{{forms.search.content_url}}';
+	theUrl = theUrl.replace(/&amp;/g, "&");
+	if(theUrl.indexOf('sort=') > 0){
+		var arr = theUrl.split('&');
+		for(i = 0; i < arr.length; i++){
+			if(arr[i].substring(0, 5) == 'sort='){
+				theUrl = theUrl.replace(arr[i],'sort=' + sort);	
+			}
+		}
+	} else {
+		theUrl = theUrl + '&sort=' + sort;
+	}
+	window.open(theUrl,'_self');
+}
+</script>
+{{/if}}
+<div class="paginationTop">
+{{> components/common/paginator pagination.category}}
+</div>

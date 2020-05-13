@@ -1,0 +1,8 @@
+<h1 class="page-heading" id="searchHeader">
+    {{lang 'search.results.count' count=result_count search_query=forms.search.query}}
+</h1>
+<script>
+var html = document.getElementById('searchHeader').innerHTML;
+html	= html.replace(/\+/g, " ");
+document.getElementById('searchHeader').innerHTML = html;
+</script>

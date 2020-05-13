@@ -1,0 +1,1 @@
+{{#each facets}}{{#if facet "==" ../all_facets}}[{{#each items}}{"filter":"{{title}}","count":"{{count}}","url":"{{url}}","selected":"{{selected}}"}{{#unless @last}},{{/unless}}{{/each}}]{{/if}}{{/each}}

@@ -1,0 +1,134 @@
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.checkout.subtotal'}}:</div>
+	<div class="cartTotal"><span>{{cart.sub_total.formatted}}</span><div class="cartDelete">&nbsp;</div></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+
+{{#if cart.gift_wrapping_cost.amount}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.checkout.gift_wrapping'}}:</div>
+	<div class="cartTotal"><span>{{cart.gift_wrapping_cost.formatted}}</span><div class="cartDelete">&nbsp;</div></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/if}}
+
+{{#if cart.shipping_handling.show_estimator}}
+<div class="cartRow cartSummary" style="display: none;">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.checkout.shipping'}}:{{#if cart.shipping_handling.shipping_cost}}<br/><span class="cartShippingChoice">{{cart.shipping_handling.provider.description}}</span>{{/if}}</div>
+	<div class="cartTotal">{{#if cart.shipping_handling.shipping_cost}}<span class="cartShippingCost">{{cart.shipping_handling.shipping_cost.formatted}}</span><br/>{{/if}}<span class="cartCalculate" id="cartCalculateLabel" onclick="toggleShippingEstimator();">{{#if cart.shipping_handling.provider}}Change{{else}}Calculate{{/if}}</span><div class="cartDelete">&nbsp;</div></div>
+	{{> components/cart/shipping-estimator cart.shipping_handling}}
+</div>
+{{/if}}
+
+
+{{#each cart.taxes}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{name}}:</div>
+	<div class="cartTotal"><span>{{cost.formatted}}</span><div class="cartDelete">&nbsp;</div></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/each}}
+
+{{#if cart.discount}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.discount'}}:</div>
+	<div class="cartTotal"><span>{{cart.discount.formatted}}</span><div class="cartDelete">&nbsp;</div></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/if}}
+
+{{#each cart.coupons}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.coupons.code_label' code=code}}</div>
+	<div class="cartTotal"><span>{{discount.formatted}}</span><a href="{{remove_url}}"><div class="cartDelete"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAXCAMAAADeH4ToAAAAAXNSR0IArs4c6QAAAHJQTFRFBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmil////dG6szAAAACR0Uk5TAMzS4YZE8EekqvXI+u+4mXvu/PZ4UWxjWoe0pZZuZM6db/f4WB4CZAAAAAFiS0dEJcMByQ8AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfhAhITBhW0+/C3AAAAEGNhTnYAAAATAAAAFwAABhkAAAFr6ohdfwAAAHhJREFUGNPV0UcOgCAQQNGxO3YUu1i5/xlFVGThxqV/x8uESQDgUwaXmbpZtiOy3fvs+YhBiKIwQvS9w+Ik1UrkLM8crYwfRvKCqIqcyAtN+iyj12phZQV1DVWjW9tB30M3/MkaCowBHZVN8/Ms83TasnLVxt4/Zwf8Rw+RLG+1wQAAAShleElmAAgABwESAAMAAAABAAAAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAeAAAAcgEyAAIAAAAUAAAAkIdpAAQAAAABAAAApAAAANAAAABIAAAAAQAAAEgAAAABQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykAMjAxNzowMjoxNiAxMTo1MDoxNAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAHCKADAAQAAAABAAADtQAAAAAAAAAGAQMAAwAAAAEABgAAARoABQAAAAEAAAEeARsABQAAAAEAAAEmASgAAwAAAAEAAgAAAgEABAAAAAEAAAEuAgIABAAAAAEAAAAAAAAAAAAAAEgAAAABAAAASAAAAAHdXkBqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTAyLTE4VDE5OjA2OjIxKzAxOjAw1MvDBwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0wMi0xOFQxOTowNjoyMSswMTowMKWWe7sAAAApdEVYdGRjOmZvcm1hdABhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9w5K2fVAAAADh0RVh0aWNjOmNvcHlyaWdodABDb3B5cmlnaHQgKGMpIDE5OTggSGV3bGV0dC1QYWNrYXJkIENvbXBhbnn5V3k3AAAAIXRFWHRpY2M6ZGVzY3JpcHRpb24Ac1JHQiBJRUM2MTk2Ni0yLjFXrdpHAAAAJnRFWHRpY2M6bWFudWZhY3R1cmVyAElFQyBodHRwOi8vd3d3LmllYy5jaBx/AEwAAAA3dEVYdGljYzptb2RlbABJRUMgNjE5NjYtMi4xIERlZmF1bHQgUkdCIGNvbG91ciBzcGFjZSAtIHNSR0JEU0ipAAAADXRFWHRsYWJlbABGb3JtYSAxg1ASiwAAABV0RVh0cGhvdG9zaG9wOkNvbG9yTW9kZQAzVgKzQAAAACZ0RVh0cGhvdG9zaG9wOklDQ1Byb2ZpbGUAc1JHQiBJRUM2MTk2Ni0yLjEcL2wLAAAAE3RFWHR0aWZmOlhSZXNvbHV0aW9uADcyDlBxhQAAABN0RVh0dGlmZjpZUmVzb2x1dGlvbgA3MpNfkPMAAAAodEVYdHhtcDpDcmVhdGVEYXRlADIwMTItMDYtMjBUMjI6MDQ6MTUtMDU6MDAjPCpEAAAALXRFWHR4bXA6Q3JlYXRvclRvb2wAQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cyl97wykAAAAKnRFWHR4bXA6TWV0YWRhdGFEYXRlADIwMTctMDItMTZUMTE6NTA6MTQrMDU6MDDAtSAFAAAAKHRFWHR4bXA6TW9kaWZ5RGF0ZQAyMDE3LTAyLTE2VDExOjUwOjE0KzA1OjAw/BFzuwAAADp0RVh0eG1wTU06RGVyaXZlZEZyb20AeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQoML4sgAAAA5dEVYdHhtcE1NOkRvY3VtZW50SUQAeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQgjg8RAAAAA5dEVYdHhtcE1NOkluc3RhbmNlSUQAeG1wLmlpZDo0Njg0QkY2OTEyRjRFNjExOEMyMEZCNDREM0I0NDQwN0F/rboAAABBdEVYdHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRAB4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4REJCOEY3MTFDMjRGRkFCoRrT0AAAAABJRU5ErkJggg=="/></div></a></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/each}}
+
+{{#each cart.gift_certificates}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">{{lang 'cart.gift_certificates.code_label' code=code}}</div>
+	<div class="cartTotal"><span>{{remaining.formatted}} | {{used.formatted}}</span><a href="{{remove_url}}"><div class="cartDelete"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAXCAMAAADeH4ToAAAAAXNSR0IArs4c6QAAAHJQTFRFBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmil////dG6szAAAACR0Uk5TAMzS4YZE8EekqvXI+u+4mXvu/PZ4UWxjWoe0pZZuZM6db/f4WB4CZAAAAAFiS0dEJcMByQ8AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfhAhITBhW0+/C3AAAAEGNhTnYAAAATAAAAFwAABhkAAAFr6ohdfwAAAHhJREFUGNPV0UcOgCAQQNGxO3YUu1i5/xlFVGThxqV/x8uESQDgUwaXmbpZtiOy3fvs+YhBiKIwQvS9w+Ik1UrkLM8crYwfRvKCqIqcyAtN+iyj12phZQV1DVWjW9tB30M3/MkaCowBHZVN8/Ms83TasnLVxt4/Zwf8Rw+RLG+1wQAAAShleElmAAgABwESAAMAAAABAAAAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAeAAAAcgEyAAIAAAAUAAAAkIdpAAQAAAABAAAApAAAANAAAABIAAAAAQAAAEgAAAABQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykAMjAxNzowMjoxNiAxMTo1MDoxNAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAHCKADAAQAAAABAAADtQAAAAAAAAAGAQMAAwAAAAEABgAAARoABQAAAAEAAAEeARsABQAAAAEAAAEmASgAAwAAAAEAAgAAAgEABAAAAAEAAAEuAgIABAAAAAEAAAAAAAAAAAAAAEgAAAABAAAASAAAAAHdXkBqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTAyLTE4VDE5OjA2OjIxKzAxOjAw1MvDBwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0wMi0xOFQxOTowNjoyMSswMTowMKWWe7sAAAApdEVYdGRjOmZvcm1hdABhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9w5K2fVAAAADh0RVh0aWNjOmNvcHlyaWdodABDb3B5cmlnaHQgKGMpIDE5OTggSGV3bGV0dC1QYWNrYXJkIENvbXBhbnn5V3k3AAAAIXRFWHRpY2M6ZGVzY3JpcHRpb24Ac1JHQiBJRUM2MTk2Ni0yLjFXrdpHAAAAJnRFWHRpY2M6bWFudWZhY3R1cmVyAElFQyBodHRwOi8vd3d3LmllYy5jaBx/AEwAAAA3dEVYdGljYzptb2RlbABJRUMgNjE5NjYtMi4xIERlZmF1bHQgUkdCIGNvbG91ciBzcGFjZSAtIHNSR0JEU0ipAAAADXRFWHRsYWJlbABGb3JtYSAxg1ASiwAAABV0RVh0cGhvdG9zaG9wOkNvbG9yTW9kZQAzVgKzQAAAACZ0RVh0cGhvdG9zaG9wOklDQ1Byb2ZpbGUAc1JHQiBJRUM2MTk2Ni0yLjEcL2wLAAAAE3RFWHR0aWZmOlhSZXNvbHV0aW9uADcyDlBxhQAAABN0RVh0dGlmZjpZUmVzb2x1dGlvbgA3MpNfkPMAAAAodEVYdHhtcDpDcmVhdGVEYXRlADIwMTItMDYtMjBUMjI6MDQ6MTUtMDU6MDAjPCpEAAAALXRFWHR4bXA6Q3JlYXRvclRvb2wAQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cyl97wykAAAAKnRFWHR4bXA6TWV0YWRhdGFEYXRlADIwMTctMDItMTZUMTE6NTA6MTQrMDU6MDDAtSAFAAAAKHRFWHR4bXA6TW9kaWZ5RGF0ZQAyMDE3LTAyLTE2VDExOjUwOjE0KzA1OjAw/BFzuwAAADp0RVh0eG1wTU06RGVyaXZlZEZyb20AeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQoML4sgAAAA5dEVYdHhtcE1NOkRvY3VtZW50SUQAeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQgjg8RAAAAA5dEVYdHhtcE1NOkluc3RhbmNlSUQAeG1wLmlpZDo0Njg0QkY2OTEyRjRFNjExOEMyMEZCNDREM0I0NDQwN0F/rboAAABBdEVYdHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRAB4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4REJCOEY3MTFDMjRGRkFCoRrT0AAAAABJRU5ErkJggg=="/></div></a></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/each}}
+
+{{#if cart.grand_total.value "==" cart.sub_total.value}}
+{{else}}
+<div class="cartRow cartSummary">
+	<div class="cartImage">&nbsp;</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">Total:</div>
+	<div class="cartTotal"><span>{{cart.grand_total.formatted}}</span><div class="cartDelete">&nbsp;</div></div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/if}}
+
+<script>
+function toggleShippingEstimator(){
+	if($("#shippingEstimator").css('display') == 'none'){
+		$("#shippingEstimator").css('display','block');
+		$("#cartCalculateLabel").html('Cancel');
+	} else {
+		$("#shippingEstimator").css('display','none');
+		$("#cartCalculateLabel").html('Calculate');
+	}
+}
+
+var freeThresh = 40;
+var totalQTY = 0;
+var totalPrice = 0;
+var totalItems = 0;
+var singleCount = 0;
+{{#each cart.items}}
+totalQTY = totalQTY + {{quantity}};
+totalPrice = totalPrice + {{price.value}}*{{quantity}};
+totalItems = totalItems + 1;
+{{#each custom_fields}}
+{{#if name '==' "Product Type"}}
+{{#if value '==' "Single Card"}}
+singleCount = singleCount + 1;
+{{/if}}
+{{/if}}
+{{/each}}
+{{/each}}
+
+if(singleCount > 0 && singleCount == totalItems && totalPrice < freeThresh){
+	var totalNeeded = freeThresh - totalPrice;
+	var msg = 'You need just $' + totalNeeded.toFixed(2) + ' more worth of single cards to qualify for free U.S. shipping!';
+	$("#shippingMessage").html(msg);
+	$("#shippingMessage").css('display','block');
+} else if(singleCount > 0 && singleCount == totalItems && totalPrice >= freeThresh){
+	var msg = 'Congratulations! You qualify for free shipping in the U.S. for $' + freeThresh + ' or more worth of single cards!';
+	$("#shippingMessage").html(msg);
+	$("#shippingMessage").css('display','block');
+} else {
+	$("#shippingMessage").css('display','none');
+}
+</script>
+
+
+
+
+<!---
+    <li class="cart-total">
+        <div class="cart-total-label">
+            <strong>{{lang 'cart.gift_certificates.gift_certificate'}}:</strong>
+        </div>
+        {{> components/cart/gift-certificate-input}}
+    </li>
+--->

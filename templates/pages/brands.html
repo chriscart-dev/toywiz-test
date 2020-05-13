@@ -1,0 +1,22 @@
+---
+brands:
+cart: false
+products:
+    new:
+        limit: 0
+    featured:
+        limit: 200
+    top_sellers:
+        limit: 0
+carousel: false
+blog:
+    recent_posts: null
+---
+{{#partial "page"}}
+[
+{{#each products.featured}}
+{"id":{{id}},"name":"{{name}}","sku":"{{sku}}","price":"{{price.without_tax.value}}","pre_order":"{{pre_order}}","url":"{{url}}","image":"{{image.data}}","show_cart_action":"{{show_cart_action}}","brand":"{{brand.name}}","kw":"{{#each custom_fields}}{{#if name "==" "Keyword"}}{{value}}{{/if}}{{/each}}","status":"{{#each custom_fields}}{{#if name "==" "Status"}}{{value}}{{/if}}{{/each}}"}{{#unless @last}},{{/unless}}
+{{/each}}
+]
+{{/partial}}
+{{> layout/json}}

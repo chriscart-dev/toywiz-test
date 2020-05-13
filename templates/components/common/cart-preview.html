@@ -1,0 +1,86 @@
+<div class="floating-cart">
+	{{#if cart.items.length}}
+	<center><span class="floating-cart-header">{{cart.quantity}} item{{#if cart.quantity "==" "1"}}{{else}}s{{/if}}, subtotal {{cart.sub_total.formatted}}</span></center>
+	<div class="floating-cart-items">
+		{{#each cart.items}}
+		<div class="floating-cart-row">
+			<div class="floating-cart-img">
+				<center>
+				{{#if type '==' 'GiftCertificate'}}
+					<img src="{{cdn ../../theme_settings.default_image_gift_certificate}}" alt="GiftCertificate">
+				{{else}}
+					<img src="{{getImage image 'thumb' (cdn ../../theme_settings.default_image_product)}}" alt="{{image.alt}}">
+				{{/if}}
+				</center>
+			</div>
+			<a href="{{url}}">{{name}}</a><br/>
+			<span class="floating-cart-price">{{#if quantity '>' 1}}{{quantity}} &times; {{/if}}{{price.formatted}}</span>
+			<a href="{{remove_url}}"><div class="floating-cart-remove">x</div></a>
+			<div style="clear: both; width: 100%;"></div>
+		</div>
+		{{/each}}
+	</div>
+	<div class="floating-cart-buttons">
+		<a href="{{urls.checkout.single_address}}"><div class="preview-button floating-cart-button">Checkout</div></a>
+		<a href="{{urls.cart}}"><div class="preview-button preview-button-white floating-cart-button">View Cart</div></a>
+		<center>
+		<style>
+		.cartCC img {width: 150px; margin-bottom: 10px;}
+		</style>
+		<div class="cartCC">
+			<a href="{{urls.checkout.single_address}}"><img src="{{cdn '/assets/img/credit-cards.png'}}"/></a>
+		</div>
+		<div class="cartButtonPaypal" style="clear: both; margin-top: -10px;">
+			{{#each cart.additional_checkout_buttons}}
+			{{{this}}}
+			{{/each}}
+		</div>
+		<div id="AmazonPayButton" style="width: 150px; margin-top: 10px;"/>
+		</center>
+		<script type="text/javascript">
+		  var authRequest;
+		  OffAmazonPayments.Button("AmazonPayButton", "A1K4HEDARAOQZI", {
+			type:  "PwA",
+			color: "Gold",
+			size:  "small",
+				authorization: function() {
+			  loginOptions =
+				{scope: "profile postal_code payments:widget payments:shipping_address", popup: true};
+			  authRequest = amazon.Login.authorize (loginOptions,
+		 "https://toywiz.com/checkout.php");
+			},
+			onError: function(error) {
+				alert(error);
+			} // your error handling code
+		  });
+		</script>
+		<div style="clear: both; width: 100%;"></div>
+	</div>
+	{{else}}
+	{{lang 'cart.checkout.empty_cart'}}
+	{{/if}}
+</div>
+<!---JUSTUNO START --->
+<script type="text/javascript" >
+window.juapp=window.juapp||function(){(window.juapp.q=window.juapp.q||[]).push(arguments)} 
+
+juapp(
+'cartItems', 
+[
+{{#each cart.items}}
+{ productid: '{{product_id}}', sku:'{{sku}}', quantity: {{quantity}}, price: {{price.value}}, name: '{{name}}'}{{#unless @last}},{{/unless}}
+{{/each}}
+]
+);
+
+juapp(
+'cart',
+{
+total:{{cart.grand_total.value}},
+subtotal:{{cart.sub_total.value}}{{#if cart.taxes}},
+tax:{{#each cart.taxes}}{{cost.value}}{{/each}}{{/if}}
+currency:'USD'
+}
+);
+</script>
+<!---JUSTUNO END --->

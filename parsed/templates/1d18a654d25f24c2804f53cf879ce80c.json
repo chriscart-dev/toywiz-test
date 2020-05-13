@@ -1,0 +1,1 @@
+{"components/search/toywiz/product-count":"{{lang 'search.results.product_count' count=pagination.product_results.total}}\n"}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-us">
+	<script>var desc = '{{{category.description}}}'; if(desc.substring(0,1) == "/"){window.location.assign(desc);}</script>
+
+    <head>
+        <title>{{ head.title }}</title>
+        {{{ head.meta_tags }}}
+        {{{ head.config }}}
+        {{#block "head"}} {{/block}}
+        <link href="{{ head.favicon }}" rel="shortcut icon">
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {{{head.scripts}}}
+        {{{head.rsslinks}}}
+        {{inject 'themeImageSizes' theme_settings._images}}
+        {{inject 'genericError' (lang 'common.generic_error')}}
+        {{inject 'maintenanceMode' settings.maintenance}}
+        {{inject 'urls' urls}}
+        {{{snippet 'htmlhead'}}}
+		<meta name="google-site-verification" content="bWiaAjJxxXYqtoxm5S8krcb7D3RKCRWl-wovYBubNY0" />
+		<meta name="msvalidate.01" content="AB13559707A50BA7B4E91116B0CD07C4" />
+        {{> components/common/badges }}
+    </head>
+    <body>
+    	<div id="overlayMobile" class="mobileOnly" onclick="shopAllBrands('hide');"></div>
+        {{{snippet 'header'}}}
+        {{#if settings.privacy_cookie}}
+            {{> components/common/cookie}}
+        {{/if}}
+        {{> components/common/header }}
+		{{#if home}}
+			<style>@media all and (min-width: 801px){.shopAllBrandsHome {font: 16px Gotham Bold; margin-top: -56px; background: #fff; cursor: pointer;}}</style>
+		{{else}}
+			<style>.leftNav {display: none;}</style>
+		{{/if}}
+        {{> components/common/body }}
+
+
+		{{#unless cartpage}}
+			{{#unless accountpage}}
+				{{> components/common/ads }}
+			{{/unless}}
+		{{/unless}}
+		{{#if accountpage}}
+		<div class="linebreak" style="height: 100px;"></div>
+		{{/if}}
+        {{> components/common/footer }}
+        <script src="{{cdn '/assets/modernizr-custom.js'}}"></script>
+        <script src="{{cdn '/assets/js/bundle.js'}}"></script>
+        <script>
+            window.stencilBootstrap("{{#if template "==" "pages/custom/category/show-featured"}}pages/category{{else}}{{template}}{{/if}}", {{jsContext}}).load();
+        </script>
+
+		{{#unless cartpage}}
+			{{#unless featured}}
+				<script>window.stencilBootstrap("pages/product").load();</script>
+			{{/unless}}
+		{{/unless}}
+
+        {{{footer.scripts}}}
+        {{{snippet 'footer'}}}
+
+		<!-- Google Code for Remarketing Tag -->
+		<!--------------------------------------------------
+		Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. See more information and instructions on how to setup the tag on: http://google.com/ads/remarketingsetup
+		--------------------------------------------------->
+		<style>.itemPageAds {display: none;}</style>
+		<script type='text/javascript'>window.onAmazonLoginReady = function() {amazon.Login.setClientId('amzn1.application-oa2-client.908a091410f24b6c935d83f76526288c');};</script>
+		<script type='text/javascript'src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js'></script>
+		{{#unless cartpage}}
+		<script type="text/javascript">
+		var google_tag_params = {
+		{{#if product.sku}}ecomm_prodid: '{{product.sku}}',{{/if}}
+		ecomm_pagetype: '{{#if home}}home{{else}}{{#if product.sku}}product{{else}}{{#if cartpage}}cart{{else}}{{#if searchpage}}search{{else}}{{#if categorypage}}category{{else}}Other{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}',
+		{{#if product.price.without_tax.value}}ecomm_totalvalue: {{product.price.without_tax.value}},{{/if}}
+		};
+		</script>
+		{{/unless}}
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		var google_conversion_id = 1072657029;
+		var google_custom_params = window.google_tag_params;
+		var google_remarketing_only = true;
+		/* ]]> */
+		</script>
+		<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+		</script>
+		<noscript>
+		<div style="display:inline;">
+		<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1072657029/?value=0&amp;guid=ON&amp;script=0"/>
+		</div>
+		</noscript>
+		<script> var klevu_filterLimit=50;</script>
+    </body>
+</html>

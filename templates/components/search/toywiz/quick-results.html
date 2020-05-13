@@ -1,0 +1,17 @@
+{{#if product_results.products}}
+    <ul class="quicksearch--grid">
+        {{#each product_results.products}}
+		<a href="{{url}}">
+        <li class="product--row">
+			<div class="product--row--img"><img src="{{getImage image 'thumb' (cdn theme_settings.default_image_product)}}" alt="{{image.alt}}"></div>
+			<div class="product--row--text">{{name}}</div>
+			<div class="product--row--break"></div>
+        </li>
+		</a>
+        {{/each}}
+    </ul>
+{{else}}
+    <p class="quickSearchMessage">
+        {{lang 'search.results.quick_count' count=pagination.product_results.total search_query=forms.search.query}}
+    </p>
+{{/if}}

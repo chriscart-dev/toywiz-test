@@ -1,0 +1,64 @@
+<center>
+<article class="card {{#if alternate}}card--alternate{{/if}}">
+	<a href="{{url}}">
+    <figure class="card-figure">
+				<div class="card-image" style="background-image:url('{{getImage image 'product' (cdn theme_settings.default_image_product)}}');">
+<!--- <img class="card-image" src="{{getImage image 'product' (cdn theme_settings.default_image_product)}}" alt="{{image.alt}}"> --->
+		</div>
+        <figcaption class="card-figcaption">
+            <div class="card-figcaption-body">
+                {{#unless hide_product_quick_view}}
+                    {{#if theme_settings.show_product_quick_view}}
+<!---                        <a href="#" class="button button--small card-figcaption-button quickview" data-product-id="{{id}}">{{lang 'products.quick_view'}}</a> --->
+                    {{/if}}
+                {{/unless}}
+                {{#if show_compare}}
+                    <label class="button button--small card-figcaption-button" for="compare-{{id}}">
+                        {{lang 'products.compare'}} <input type="checkbox" name="products[]" value="{{id}}" id="compare-{{id}}" data-compare-id="{{id}}">
+                    </label>
+                {{/if}}
+            </div>
+        </figcaption>
+    </figure>
+	</a>
+    <div class="card-body">
+        {{#if show_rating}}
+            <p class="card-text" data-test-info-type="productRating">
+                <span class="rating--small">
+                    {{> components/products/ratings rating=rating}}
+                </span>
+            </p>
+        {{/if}}
+        {{#if brand.name}}
+<!---            <p class="card-text" data-test-info-type="brandName">{{brand.name}}</p> --->
+        {{/if}}
+        <h4 class="card-title">
+            <a href="{{url}}">{{name}}</a>
+        </h4>
+
+        <div class="card-text" data-test-info-type="price">
+		{{#if add_to_cart_url}}
+            {{> components/products/price price=price}}
+		{{else if pre_order "==" true}}
+            {{> components/products/price price=price}}
+		{{/if}}
+        </div>
+
+		{{#if add_to_cart_url}}
+			<form class="form" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>
+				<input type="hidden" name="action" value="add">
+				<input type="hidden" name="product_id" value="{{id}}"/>
+				<input id="form-action-addToCart" data-wait-message="Adding..." class="cartButton {{#if pre_order}}cartPre{{else}}cartAdd{{/if}}" type="submit" value="{{#if pre_order}}Pre-Order{{else}}Add to Cart{{/if}}">
+			</form>
+		{{else if pre_order "==" true}}
+			<form class="form" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>
+				<input type="hidden" name="action" value="add">
+				<input type="hidden" name="product_id" value="{{id}}"/>
+				<input id="form-action-addToCart" data-wait-message="Adding..." class="cartButton {{#if pre_order}}cartPre{{else}}cartAdd{{/if}}" type="submit" value="{{#if pre_order}}Pre-Order{{else}}Add to Cart{{/if}}">
+			</form>
+		{{else}}
+			<div class="cartButton cartOOS"><span class="cartText">Out of Stock</span></div>
+		{{/if}}
+    </div>
+</article>
+</center>

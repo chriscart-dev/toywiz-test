@@ -1,0 +1,174 @@
+<script>
+function toggleFilters(facet,count){
+	if($("[id='accordion-content-" + facet + "']").css('height') == '0px'){
+		$("[id='accordion-content-" + facet + "']").css('height','auto');
+		$("[id='accordion-content-" + facet + "']").css('margin-bottom','20px');
+		$("[id='accordion-triangle-" + facet + "']").addClass('accordion-triangle-rotate');
+		if(count == '15'){
+			$("[id='accordion-content-" + facet + "']").html('Loading...');
+			getFilters(facet,'open');
+		}
+	} else {
+		$("[id='accordion-content-" + facet + "']").css('height','0px');
+		$("[id='accordion-content-" + facet + "']").css('margin-bottom','0px');
+		$("[id='accordion-triangle-" + facet + "']").removeClass('accordion-triangle-rotate');
+	}
+}
+
+function fireWhenReady(facet,state) {
+	if(typeof getFilters == 'function'){
+		getFilters(facet,state);
+	} else {
+		setTimeout(function(){fireWhenReady(facet,state);}, 100);
+	}
+}
+
+var showFilter = new Array();
+var filterCount = new Array();
+</script>
+<div id="facetedSearch" class="facetedSearch sidebarBlock">
+
+    {{> components/faceted-search/selected-facets this.selected}}
+
+    <a href="#facetedSearch-navList" role="button" class="facetedSearch-toggle toggleLink" data-collapsible style="display: none;">
+        <span class="facetedSearch-toggle-text">
+            {{#if facets.length '>' 2}}
+                {{lang 'search.faceted.browse-by'}} {{ join (pluck facets 'title') ', ' limit=2 }} &amp; {{ toLowerCase (lang 'search.faceted.more') }}
+            {{/if}}
+
+            {{#if facets.length '<=' 2}}
+                {{lang 'search.faceted.browse-by'}} {{ join (pluck facets 'title') ', ' lastSeparator=' & ' }}
+            {{/if}}
+        </span>
+
+        <span class="facetedSearch-toggle-indicator">
+            <span class="toggleLink-text toggleLink-text--on">
+                {{lang 'search.faceted.hide-filters'}}
+
+                <i class="icon" aria-hidden="true">
+                    <svg><use xlink:href="#icon-keyboard-arrow-up"/></svg>
+                </i>
+            </span>
+
+            <span class="toggleLink-text toggleLink-text--off">
+                {{lang 'search.faceted.show-filters'}}
+
+                <i class="icon" aria-hidden="true">
+                    <svg><use xlink:href="#icon-keyboard-arrow-down"/></svg>
+                </i>
+            </span>
+        </span>
+    </a>
+
+    {{#any facets visible=true}}
+        <div id="facetedSearch-navList" class="facetedSearch-navList blocker-container">
+            <div class="accordion accordion--navList">
+                {{#each facets}}
+                    {{#if visible}}
+                        {{{dynamicComponent 'components/faceted-search/facets'}}}
+                    {{/if}}
+                {{/each}}
+            </div>
+            <div class="blocker" style="display: none;"></div>
+        </div>
+    {{/any}}
+
+
+
+
+
+
+	<h5 class="accordion-title mobileHide" style="text-transform: none; margin-top: -20px;">&nbsp;Price</h5>
+    <div id="facetedSearch-content--{{ facet }}" class="accordion-content-open {{#unless ../start_collapsed }} is-open {{/unless}} mobileHide" style="margin-top: 10px;">
+        <form id="facet-range-form" class="form" method="get" data-faceted-search-range novalidate>
+            {{#each current_selected_items}}
+                <input type="hidden" name="{{ param_name }}[]" value="{{ param_value }}"/>
+            {{/each}}
+            <input type="hidden" name="search_query" value="{{search_query}}">
+            {{#if sort}}
+                <input type="hidden" name="sort" value="{{sort}}">
+            {{/if}}
+            <fieldset class="form-fieldset">
+                <div class="form-minMaxRow">
+                    <div class="form-field">
+                        <input
+                            id="min_price"
+                            name="min_price"
+                            placeholder="{{lang 'search.faceted.range.min-placeholder'}}"
+                            min="0"
+                            class="form-input form-input--small"
+                            required
+                            type="number"
+                            value="{{ min_price }}"
+                        />
+                    </div>
+
+                    <div class="form-field">
+                        <input
+                            id="max_price"
+                            name="max_price"
+                            placeholder="{{lang 'search.faceted.range.max-placeholder'}}"
+                            min="0"
+                            class="form-input form-input--small"
+                            required
+                            type="number"
+                            value="{{ max_price }}"
+                        />
+                    </div>
+
+                    <div class="form-field">
+                        <button class="button button--small" type="submit">
+                            {{lang 'search.faceted.range.update'}}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-inlineMessage"></div>
+            </fieldset>
+        </form>
+    </div>
+
+
+
+</div>
+
+
+<script>
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+var html = document.getElementById('facetedSearch').innerHTML;
+if(getParameterByName('search_query')){
+	html = html.replace(new RegExp(getParameterByName('search_query').replace(/\+/g, "\\+"), 'g'), getParameterByName('search_query').replace(/\+/g, "%2B"));
+}
+document.getElementById('facetedSearch').innerHTML = html;
+
+document.getElementById('min_price').value = getParameterByName('min_price');
+document.getElementById('max_price').value = getParameterByName('max_price');
+</script>
+<script>
+var keywords = document.getElementsByName('keywords')[0].getAttribute('content').split(',');
+var	filterCount   = 0;
+for(i = 0; i < keywords.length; i++){
+	if(keywords[i].substring(0, 6) == 'filter'){
+		filterCount++;
+		filter = keywords[i].substring(6, 100);
+		document.getElementById('filter' + filter).style.display = 'block';
+		//$(document).ready(fireWhenReady(keywords[i].substring(6, 100)));
+	}
+}
+if(filterCount == 0){
+	$(".filterBlock").css('display','block');
+}
+
+for(i = 0; i < showFilter.length; i++){
+	toggleFilters(showFilter[i],filterCount[i])
+}
+</script>

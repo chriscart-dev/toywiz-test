@@ -1,0 +1,810 @@
+<div class="item">
+	<div class="productThumbs">
+		{{#each (limit product.images 5)}}
+		<li{{#if @index "==" 0}} class="productThumbSelected"{{/if}}><div style="background-image:url('{{getImage this 'zoom' (cdn ../theme_settings.default_image_product)}}');"></div></li>
+		{{/each}}
+	</div>
+	<div class="productTitleMobile mobileOnly">{{product.title}}</div>
+	<div class="productImage">
+		<img id="productImageMain" src="{{getImage product.main_image 'zoom' (cdn ../theme_settings.default_image_product)}}" alt="{{product.main_image.alt}}"/>
+		<div class="productImageHover"></div>
+	</div>
+	<div class="productInfo">
+		<div class="productZoom"></div>
+		<div class="productRight">
+			<div class="productBuybox">
+				<form id="{{id}}addtocart" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>
+				{{#if product.can_purchase}}
+				<script>fbq('track', 'ViewContent', {content_name: '{{product.title}}', content_ids: ['{{product.sku}}'], content_type: 'product', value: {{product.price.without_tax.value}}, currency: 'USD'});</script>
+				<div class="buyboxBlock">
+				<center>
+					{{#if product.price.saved}}
+					<div class="buyboxPrice mobileHide"><label>Price: </label>
+					<span class="price-regular" style="color: #707070;">{{product.price.rrp_without_tax.formatted}}</span></div>
+					{{/if}}
+					<div class="buyboxPrice">
+						<div class="buyboxLabel">{{#if product.price.saved}}Sale {{/if}}Price: </div>
+						<div class="buyboxValue">{{product.price.without_tax.formatted}}</div>
+					</div>
+					<div class="buyboxPrice buyboxQTY">
+						<div class="buyboxLabel">QTY:</div>
+						<div class="buyboxValue"><select id="qty[]" name="qty[]">
+							{{#if product.stock_level}}
+								{{#each (limit pages 31)}}
+								{{#if @index ">" 0}}
+								{{#if @index "<=" ../../product.stock_level}}
+								<option value="{{@index}}">{{@index}}</option>
+								{{/if}}
+								{{/if}}
+								{{/each}}
+							{{else}}
+								{{#each (limit pages 31)}}
+								{{#if @index ">" 0}}
+								<option value="{{@index}}">{{@index}}</option>
+								{{/if}}
+								{{/each}}
+							{{/if}}
+						</select></div>
+					</div>
+					<div class="linebreak1"></div>
+				</div>
+				{{/if}}
+				<input type="hidden" name="action" value="add">
+				<input type="hidden" name="product_id" value="{{product.id}}"/>
+				<div class="productCart{{#if product.can_purchase}}{{else}} productCartOOS{{/if}}">
+					<div class="productCartImg"><img src="{{cdn '/assets/img/addcart'}}{{#if product.can_purchase}}{{else if product.pre_order}}{{else}}-x{{/if}}.png"/></div>
+					<div class="productCartSpan">{{#if product.can_purchase}}{{#if product.pre_order}}Pre-Order{{else}}Add to Cart{{/if}}{{else}}Out of Stock{{/if}}</div>
+					{{#if product.can_purchase}}<input id="form-action-addToCart" data-wait-message="" type="submit" value="">{{/if}}
+				</div>
+				<div class="wishlistAdd" onclick="wishlistAdd();">
+					<img src="{{cdn '/assets/img/heart'}}.png"/>
+				</div>
+				</center>
+				<div class="clear">&nbsp;</div>
+
+				</form>
+				<div id="stockStatus" class="addtocartInfoLines"{{#if product.can_purchase}}{{else}} style="display: none;"{{/if}}></div>
+				<div id="wishlist" class="addtocartInfoLines mobileHide">
+					<form id="formWishlist" method="post" action="/wishlist.php?action=add&amp;product_id={{product.id}}" data-wishlist-add="">
+							<input type="hidden" name="variation_id" value="">
+							<input class="wishlist-button" type="hidden" value="Add to Wishlist">
+					</form>
+					<span onclick="wishlistAdd();">Add to Wishlist</span>
+				</div>
+				<script>
+					var available = '';
+					{{#if product.can_purchase}}
+					{{#if product.stock_level "<" 10}}
+					var available = '<span class="productAvailability"> Only {{product.stock_level}} available. Order now!</span>';
+					{{/if}}
+					{{else}}
+					{{/if}}
+
+					var name = "{{product.title}}";
+					if(name.indexOf('ships ') < 0){
+						$("#stockStatus").html('In Stock!' + available);
+					} else {
+						var month = name.substring(name.indexOf('ships ') + 6, 1000);
+						month = month.substring(0, month.indexOf(')'));
+						$("#stockStatus").html('Ships ' + month);
+					}
+					
+					function wishlistAdd(){
+						$("#formWishlist").submit();
+					}
+				</script>
+
+
+				{{#if product.can_purchase}}
+				{{#if product.pre_order}}
+				<div class="addtocartInfoLines addtocartInfoPreorder" onclick="togglePreorders();">
+					<span>How do pre-orders work?</span><div id="preorderArrow">&#9654;</div><Br/>
+					<div class="preorderBody">
+						<li>Pre-Ordering is a great way to guarantee yourself a place in line.</li>
+						<li>If you choose, we will not charge your credit card until the product ships. (Unless you are paying by PayPal.)</li>
+						<li>Ship months are subject to the manufacturer and any changes will be reflected on the website.</li>
+						<div style="font-size: 12px; margin-left: 20px;"><a href="/pre-orders-info" target="_blank">Click here for more info</a></div>
+					</div>
+				</div>
+				<script>
+				function togglePreorders(){
+					if($(".preorderBody").css('display') == 'none'){
+						$("#preorderArrow").html('&#9660;');
+						$(".preorderBody").css('display','block');
+					} else {
+						$("#preorderArrow").html('&#9654;');
+						$(".preorderBody").css('display','none');
+					}
+				}
+				</script>
+				{{else}}
+				{{/if}}
+				{{/if}}
+				{{#each product.custom_fields}}
+				{{#if name "==" "Notes"}}
+					{{#if value "==" ""}}
+					{{else}}
+				<div class="addtocartInfoLines notesCollector" onclick="toggleNotes();">
+					<span>Collector Notes</span><div id="notesArrow">&#9654;</div><Br/>
+					<div class="notesBody">
+						<div class="productNotes">{{{value}}}</div>
+					</div>
+				</div>
+				<div class="addtocartInfoLines belowPreorders" style="border-bottom: none; margin-top: 10px; display: none;"></div>
+					{{/if}}
+				{{/if}}
+				{{/each}}
+				<div class="addtocartInfoLines addtocartInfoDesc mobileOnly" onclick="toggleDescription();">
+					<span>Product Description</span><div id="descriptionArrow">&#9654;</div><Br/>
+					<div class="descriptionMoreBody">
+						<div class="productDescriptionTab">{{{product.description}}}</div>
+					</div>
+				</div>
+				<div class="addtocartInfoLines addtocartInfoDesc mobileOnly" style="border-bottom: 0px;">
+					See all <span class="productManufacturer productManufacturerMobile">&nbsp;</span>
+				</div>
+
+
+
+			</div>
+			<div class="productSocials addthis_toolbox addthis_32x32_style" addthis:url="{{url}}" addthis:title="{{title}}">
+				<!-- BEGIN: _GUARANTEE Seal -->
+					<span id="_GUARANTEE_SealSpan" style="margin-left: -10px;"></span>
+					<img src="{{cdn '/assets/img/norton.jpg'}}" style="display: none; margin-bottom: 26px; margin-top: 10px; margin-left: -10px;"/> 
+				<!-- END: _GUARANTEE Seal -->
+				<div class="share" style="margin-top: -10px;">
+					<li style="width: auto; margin-right: 6px;">Share:</li>
+					<li><a class="addthis_button_email" ><img src="{{cdn '/assets/img/socialMAIL.jpg'}}"/></a></li>
+					<li><a class="addthis_button_facebook" ><img src="{{cdn '/assets/img/socialFB.jpg'}}"/></a></li>
+					<li><a class="addthis_button_twitter" ><img src="{{cdn '/assets/img/socialTW.jpg'}}"/></a></li>
+					<li><a class="addthis_button_pinterest" ><img src="{{cdn '/assets/img/socialPN.jpg'}}"/></a></li>
+					<li style="display: none;"><img src="{{cdn '/assets/img/socialIN.jpg'}}"/></li>
+				</div>
+			</div>
+			<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e94ed470ee51e32"></script>
+			<script>if (typeof(addthis) === "object") {addthis.toolbox('.addthis_toolbox');}</script>
+		</div>
+		
+		<div class="productTitle mobileHide"><h1>{{product.title}}</h1></div>
+		<div id="productManufacturer" class="productManufacturer mobileHide">&nbsp;</div>
+		<div class="productSub"></div>
+		<div class="productTabs mobileHide" style="z-index: 1;">
+			<ul>
+				<li id="tabHeader1">Description</li>
+				<li data-id="1">Description</li>
+				<li data-id="5" id="accessoriesHeader" style="display: none;">Accessories</li>
+				<li data-id="2">Details</li>
+				<li data-id="3" id="damagedPackage" style="display: none;">Damaged Package</li>
+				<li data-id="4" id="sellUsYours" style="display: none;">Sell us Yours</li>
+			</ul>
+			<div id="tabBody1" class="productTab">
+				<div class="productDescriptionFrame mobileHide">
+					<div class="productDescription">
+						{{{product.description}}}
+					</div>
+					<div class="productDescriptionMore" onclick="descriptionMore();">Read Full Description...</div>
+				</div>
+			</div>
+			<div id="tabBody2" class="productTab" style="column-count: 2;">
+				<div id="ProductDetails" style="display: none">
+					<div class="ProductDetailsGrid">
+						<div class="DetailRow ProductSKU">
+							<div class="Label">SKU:</div>
+							<div class="Value"><span class="VariationProductSKU">{{product.sku}}</span></div>
+						</div>
+					</div>
+				</div>
+
+				<label>SKU:</label> {{product.sku}}<br/>
+				{{#if product.upc}}
+				<label>UPC:</label> {{product.upc}}<br/>
+				{{/if}}
+				<label>STOCK #:</label> {{product.id}}<br/>
+				<label>Availability:</label> {{#if product.can_purchase}}{{#if product.pre_order}}Pre-Order{{else}}In Stock{{/if}}{{else}}Out of Stock{{/if}}<br/>
+				<label>Condition:</label> New<br/>
+
+
+				{{#each product.custom_fields}}
+				{{#if name "==" "Release"}}<label>Release:</label> {{value}}<br/>{{/if}}
+				{{/each}}
+			</div>
+			<div id="tabBody5" class="productTab"></div>
+			<div id="tabBody3" class="productTab"></div>
+			<div id="tabBody4" class="productTab">
+				<a href="https://tools.toywiz.com/buylist/?id={{product.sku}}" target="_blank"><img src="{{cdn '/assets/img/buying.jpg'}}"/></a>
+			</div>
+		</div>
+	</div>
+<!-- IS+ Product Recommendation Widget START -->
+<div title="YOU MIGHT ALSO LIKE" layout="horizontal" sources="similar_products_by_attributes,similar_products,similar_products_lookalike"  id="isp-related-widget-1"></div> 
+    <script src="https://acp-magento.appspot.com/js/isp_related_products.js?v=1.0.9&UUID=34f1e2c0-fa45-486d-b338-11fd4475e19f&store=1"></script> 
+<!-- IS+ Product Recommendation Widget END -->
+
+	<div id="homeFeatured-related" class="homeFeatured">
+		<div class="productsHeader"><span>RELATED <bold>PRODUCTS</bold></span></div>
+		<div class="productsRow-previous-arrow featured-related-arrow" onclick="productsScroll('featured-related','-1',window.productCounts['related']);" id="previous-arrow-featured-related" style="opacity: 0;"></div>
+		<div id="featured-related" class="productsRow featured-products-full">
+			<div id="featured-relatedFrame" class="featuredFrame">
+				<div id="featured-relatedInner" class="productsRow-inner">
+					<div class="productBlock"></div>
+				</div>
+			</div>
+		</div>
+		<div class="productsRow-next-arrow feature-related-arrow" onclick="productsScroll('featured-related','1',window.productCounts['related']);" id="next-arrow-featured-related"></div>
+	</div>
+	<div id="homeFeatured-similar" class="homeFeatured">
+		<div class="productsHeader"><span>CUSTOMERS <bold>ALSO VIEWED</bold></span></div>
+		<div class="productsRow-previous-arrow featured-similar-arrow" onclick="productsScroll('featured-similar','-1',window.productCounts['similar']);" id="previous-arrow-featured-similar" style="opacity: 0;"></div>
+		<div id="featured-similar" class="productsRow featured-products-full">
+			<div id="featured-similarFrame" class="featuredFrame">
+				<div id="featured-similarInner" class="productsRow-inner">
+				</div>
+			</div>
+		</div>
+		<div class="productsRow-next-arrow featured-similar-arrow" onclick="productsScroll('featured-similar','1',window.productCounts['similar']);" id="next-arrow-featured-similar"></div>
+	</div>
+	<div id="homeFeatured-recent" class="homeFeatured">
+		<div class="productsHeader"><span>RECENTLY <bold>VIEWED</bold></span></div>
+		<div class="productsRow-previous-arrow featured-recent-arrow" onclick="productsScroll('featured-recent','-1',window.productCounts['recent']);" id="previous-arrow-featured-recent" style="opacity: 0;"></div>
+		<div id="featured-recent" class="productsRow featured-products-full">
+			<div id="featured-recentFrame" class="featuredFrame">
+				<div id="featured-recentInner" class="productsRow-inner">
+				</div>
+			</div>
+		</div>
+		<div class="productsRow-next-arrow feature-recent-arrow" onclick="productsScroll('featured-recent','1',window.productCounts['recent']);" id="next-arrow-featured-recent"></div>
+	</div>
+</div>
+<div id="productDescriptionFull" class="fullDescription">
+	<div class="fullDescriptionTitle">Product Description</div>
+	<div class="fullDescriptionBody">{{{product.description}}}</div>
+</div>
+{{#each product.custom_fields}}
+{{#if name "==" "Notes"}}
+<div id="productNotesFull" class="fullDescription mobileHide">
+	<div class="fullDescriptionTitle">Condition/Collector Notes</div>
+	<div class="fullDescriptionBody "><i>{{{value}}}</i></div>
+</div>
+{{/if}}
+{{/each}}
+
+<iframe id="recently-viewed-log" style="display: none;" src=""></iframe>
+
+<script>
+function toggleNotes(){
+	if($(".notesBody").css('display') == 'none'){
+		$("#notesArrow").html('&#9660;');
+		$(".notesBody").css('display','block');
+	} else {
+		$("#notesArrow").html('&#9654;');
+		$(".notesBody").css('display','none');
+	}
+}
+
+function toggleDescription(){
+	if($(".descriptionMoreBody").css('display') == 'none'){
+		$("#descriptionArrow").html('&#9660;');
+		$(".descriptionMoreBody").css('display','block');
+	} else {
+		$("#descriptionArrow").html('&#9654;');
+		$(".descriptionMoreBody").css('display','none');
+	}
+}
+
+
+/***** SET CUSTOM FIELDS *****/
+var accessories = '';
+var custom = [];
+{{#each product.custom_fields}}
+custom.push({'name':"{{name}}",'value':"{{value}}"});{{#if name "==" "Accessories"}}
+accessories = '{{value}}';{{/if}}
+{{/each}}
+
+var url	   = '{{#each (limit breadcrumbs 2)}}{{#if @last}}{{url}}{{/if}}{{/each}}';
+var fields = ['Company','Brand','Sub-Brand','Series','Scale','Condition','Product Type','Rarity','Filter','Status','Availability'];
+var html = '';
+var info = '';
+var values = '|';
+for(i = 0; i < fields.length; i++){
+	for(k = 0; k < custom.length; k++){
+		if(custom[k].name == fields[i] && values.indexOf('|' + custom[k].value + '|') < 0){
+			var value = custom[k].value;
+			values = values + value + '|'; 
+			if(fields[i] == 'Company'){
+				$(".productManufacturer").html(custom[k].value);
+			}
+			if(fields[i] == 'Filter'){
+				value = value.substring(value.indexOf('=') + 1, 10000);
+			}
+			if(fields[i] == 'Brand'){
+				{{#if product.brand.name}}
+				html += '<a href="{{product.brand.url}}"><span>{{product.brand.name}}</span></a> ';
+				info += '<label>Brand:</label> <a href="{{product.brand.url}}">{{product.brand.name}}</a><br/>';
+				{{/if}}
+			} else if(fields[i] == 'Sub-Brand' || fields[i] == 'Company'){
+				html += '<a href="/search.php?search_query=' + custom[k].value.replace(' ','%2B') + '&' + fields[i] + '[]=' + custom[k].value + '"><span>' + value + '</span></a> ';
+				info += '<label>' + fields[i] + ':</label> <a href="/search.php?search_query=' + custom[k].value.replace(' ','%2B') + '&' + fields[i] + '[]=' + custom[k].value + '">' + value + '</a><br/>';
+			} else if(fields[i] == 'Scale' || fields[i] == 'Product Type' || fields[i] == 'Rarity' || fields[i] == 'Status'){
+				if(fields[i] != 'Scale'){
+					html += '<a href="' + url + '?' + fields[i] + '[]=' + custom[k].value + '"><span>' + value + '</span></a> ';
+				}
+				info += '<label>' + fields[i] + ':</label> <a href="' + url + '?' + fields[i] + '[]=' + custom[k].value + '">' + value + '</a><br/>';
+			} else if(fields[i] == 'Series'){
+				if(value.indexOf('Series') > 0){
+					var series = value + ' Series';
+					series = series.substring(0, series.indexOf(' Series')) + '%2BSeries';
+				} else {
+					series = value;
+				}
+				html += '<a href="/search.php?search_query=' + series.replace(' ','%2B') + '&Series[]=' + custom[k].value + '"><span>' + value + '</span></a> ';
+				info += '<label>' + fields[i] + ':</label> <a href="/search.php?search_query=' + series.replace(' ','%2B') + '&Series[]=' + custom[k].value + '">' + value + '</a><br/>';
+			} else if(fields[i] == 'Release Date' || fields[i] == 'Condition'){
+				info += '<label>' + fields[i] + ':</label> ' + value + '<br/>';
+			} else if(fields[i] == 'Availability'){
+				info += '<label>' + fields[i] + ':</label> {{#if product.can_purchase}}{{#if product.pre_order}}Pre-Order{{else}}In Stock{{/if}}{{else}}{{Out of Stock}}{{/if}}<br/>';
+			} else {
+				if(custom[k].value.indexOf('Limited Edition') < 0){
+					html += '<a href="/search.php?search_query=' + value.replace(' ','%2B')  + '&' + fields[i] + '[]=' + custom[k].value + '"><span>' + value + '</span></a> ';
+				}
+				info += '<label>' + (fields[i] == 'Filter' ? custom[k].value.substring(0, custom[k].value.indexOf('=')) : fields[i]) + ':</label> <a href="/search.php?search_query=' + value.replace(' ','%2B')  + '&' + fields[i] + '[]=' + custom[k].value + '">' + value + '</a><br/>';
+			}
+		}
+	}
+}
+$(".productSub").html(html);
+$("#tabBody2").html($("#tabBody2").html() + info);
+
+
+/***** SET RELATED PRODUCTS AND SIMILAR PRODUCTS ARRAYS *****/
+var related = [];
+{{#each product.related_products}}
+{{#if show_cart_action}}
+related.push({'type':"related",'id':"{{id}}",'name':"{{name}}",'price':"{{price.without_tax.value}}",'url':"{{url}}",'show_cart_action':"{{show_cart_action}}",'brand':"{{brand.name}}",'preorder':"{{pre_order}}",'image':"{{image.data}}",'thumb':"{{getImage image 'thumb' (cdn ../theme_settings.default_image_product)}}","kw":"{{#each custom_fields}}{{#if name "==" "Keyword"}}{{value}}{{/if}}{{/each}}"});
+{{/if}}
+{{/each}}
+
+var similar = [];
+{{#each product.similar_by_views}}
+{{#if show_cart_action}}
+similar.push({'type':"similar",'id':"{{id}}",'name':"{{name}}",'price':"{{price.without_tax.value}}",'url':"{{url}}",'show_cart_action':"{{show_cart_action}}",'brand':"{{brand.name}}",'preorder':"{{pre_order}}",'image':"{{image.data}}",'thumb':"{{getImage image 'thumb' (cdn ../theme_settings.default_image_product)}}","kw":"{{#each custom_fields}}{{#if name "==" "Keyword"}}{{value}}{{/if}}{{/each}}"});
+{{/if}}
+{{/each}}
+
+
+/***** SET ACCESSORIES *****/
+if(accessories != ''){
+	accessoriesArray = accessories.split("|");
+	$("#accessoriesHeader").html(accessoriesArray[0]);
+	var html = '';
+	for(i = 1; i < accessoriesArray.length; i++){
+		var thisId = accessoriesArray[i];
+		for(k = 0; k < related.length; k++){
+			if(thisId == related[k].id){
+				thisProduct = {
+					'id':related[k].id,
+					'sku':related[k].sku,
+					'name':related[k].name,
+					'url':related[k].url,
+					'brand':related[k].brand,
+					'image':related[k].image.replace('{:size}','600x600'),
+					'preorder':related[k].preorder,
+					'price':related[k].price
+				};
+				html += productBlock(thisProduct).replace('productBlock','productBlockTab');
+			}
+		}
+	}
+	
+	if(html != ''){
+		$("#tabHeader1").css('display','none');
+		$(".productTab").css('display','none');
+		$(".productTabs li").css('border','1px solid #fff');
+		$(".productTabs li").css('background','#fff');
+		$(".productTabs li").css('border-bottom','1px solid #ccc');
+		$("#accessoriesHeader").css('border','1px solid #ccc');
+		$("#accessoriesHeader").css('background','#eee');
+		$("#accessoriesHeader").css('display','block');
+		$("#tabBody5").html(html);
+		$("#tabBody5").css('display','block');
+	}
+
+}
+
+/***** SET DAMAGED PACKAGE VARIANTS TAB *****/
+var title  = "{{product.title}}";
+var parentVal = "{{product.title}} [";
+parentVal = parentVal.substring(0,parentVal.indexOf(' ['));
+var html	= '';
+var dmg		= '';
+var loose	= '';
+var alt		= '';
+if(title.indexOf(' [') == 0){
+	parentDetails = '';
+} else {
+	parentDetails = title.substring(title.indexOf(' [') + 2, 1000);
+	parentDetails = parentDetails.substring(0,parentDetails.indexOf(']'));
+}
+for(i = 0; i < related.length; i++){
+	var title	= related[i].name
+	var titletmp = title + ' [';
+	var name 	= titletmp.substring(0, titletmp.indexOf(' ['));
+	if(title.indexOf(' [') > 0 || name == parentVal){
+		var details	= title.substring(title.indexOf(' [') + 2, 1000);
+		details = details.substring(0, details.indexOf(']'));
+		if(details == ''){details = 'Regular';}
+		if(name == parentVal){
+			var price = related[i].price;
+			if((parentDetails == '' && details == 'Damaged Package') ||  details == parentDetails + ', Damaged Package'){
+				var save = '(Save $' + (parseFloat('{{product.price.without_tax.value}}') - parseFloat(price.replace('$',''))).toFixed(2) + ')';
+				dmg++;		
+			} else if((parentDetails == '' && details == 'No Packaging') ||  details == parentDetails + ', No Packaging'){
+				var save = '(Save $' + (parseFloat('{{product.price.without_tax.value}}') - parseFloat(price.replace('$',''))).toFixed(2) + ')';
+				loose++;		
+			} else if((parentDetails == '' && details == 'Loose') ||  details == parentDetails + ', Loose'){
+				var save = '(Save $' + (parseFloat('{{product.price.without_tax.value}}') - parseFloat(price.replace('$',''))).toFixed(2) + ')';
+				loose++;		
+			} else {
+				var save = '';
+				alt++;
+			}
+			html += '<div class="variantImg"><a href="' + related[i].url + '"><img src="' + related[i].thumb + '"/></a></div>';
+			html += '<div class="variantTitle"><a href="' + related[i].url + '">' + (details == parentDetails + ', Damaged Package' ? 'Damaged Package' : (details == parentDetails + ', Loose' ? 'No Packaging' : details)) + '<div class="variantPrice"><span class="blood">$' + related[i].price + '</span> ' + save + '</div></a></div>';
+			html += '<form id="' + related[i].id + 'addtocart" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>';
+			html += '<div class="productCart variantCart" style="opacity: 1; width: 180px;"><div class="productCartImg"><img src="{{cdn '/assets/img/addcart.png'}}"/></div><div class="productCartSpan variantCartSpan">Add to Cart</div><input id="form-action-addToCart" data-wait-message="" type="submit" value=""></div>';
+			html += '<input type="hidden" name="action" value="add"><input type="hidden" name="product_id" value="' + related[i].id + '"/>';
+			html += '</form>';
+		}
+	}
+	if(dmg > 0 && alt == 0 && loose == 0){
+		label = 'Damaged Package';
+	} else if(dmg > 0 && loose > 0){
+		label = 'Damaged Package / Loose';
+	} else if(dmg > 0 && alt > 0){
+		label = 'Damaged Package / Variants';
+	} else if(loose > 0 && alt == 0){
+		label = 'No Packaging';
+	} else if(loose > 0 && alt > 0 ){
+		label = 'Loose / Variants';
+	} else if(alt > 0){
+		label = 'Variants';
+	} else {
+		label = '';
+	}
+}
+if(label != ''){
+	$("#tabBody3").html(html);
+	$("#damagedPackage").html(label);
+	$("#damagedPackage").css('display','block');
+}
+
+
+
+//LOG RECENTLY VIEWED ITEM ON TOOLS.TOYWIZ.COM
+var theJSON = '{"id":{{product.id}},"name":"{{product.title}}","url":"{{product.url}}","image":"{{getImage product.main_image 'product' (cdn theme_settings.default_image_product)}}","preorder":"{{product.pre_order}}","price":"{{product.price.without_tax.value}}","oos":"{{product.out_of_stock}}"}';
+var theURL = 'https://tools.toywiz.com/bigcommerce/recentlyViewed.php?action=log&json=' + encodeURIComponent(theJSON);
+document.getElementById('recently-viewed-log').src = theURL;
+
+/************************** SET RELATED, SIMILAR AND RECENT CONTENTS **************************/
+var products = [];
+for(i = 0; i < related.length; i++){
+	if(accessories.indexOf("|" + related[i].id + "|") <= 0){
+		products.push(related[i]);
+	}
+}
+for(i = 0; i < similar.length; i++){
+	if(accessories.indexOf("|" + similar[i].id + "|") <= 0){
+		products.push(similar[i]);
+	}
+}
+featured = {};
+var featuredRelated = [];
+var featuredSimilar = [];
+
+for(i = 0; i < products.length; i++){
+	if(products[i].show_cart_action == "true" && products[i].id != '{{product.id}}'){
+		if(products[i].type == 'related'){
+			featuredRelated.push(products[i].id);
+		} else if(products[i].type == 'similar'){
+			featuredSimilar.push(products[i].id);
+		}
+		featured[products[i].id] = {
+			'id':products[i].id,
+			'sku':products[i].sku,
+			'name':products[i].name,
+			'url':products[i].url,
+			'brand':products[i].brand,
+			'image':products[i].image.replace('{:size}','600x600'),
+			'preorder':products[i].preorder,
+			'price':products[i].price,
+			'kw':products[i].kw
+		};
+	}
+}
+
+
+//featuredRelated = shuffle(featuredRelated);
+if(featuredSimilar.length == 0){
+	$("#homeFeatured-similar").css('display','none');
+} else {
+	featuredSimilar = shuffle(featuredSimilar);
+}
+
+/************************** POPULATE RELATED, SIMILAR AND RECENT **************************/
+window.productCounts = {};
+
+setFeatured('related',featuredRelated,'1');
+setFeatured('similar',featuredSimilar,'1');
+
+
+</script>
+<script>
+setMainImage($("#productImageMain").attr("src"));
+
+function setMainImage(img){
+//	$("<img/>").attr("src",img).load(function(){
+//		window.mainWidth  = this.width;
+//		window.mainHeight = this.height;
+//	});
+	$("<img/>").remove();
+	$("#productImageMain").attr("src",img);
+	$(".productZoom").css('background-image',"url('" + img + "')");
+
+	window.mainWidth = document.getElementById('productImageMain').naturalWidth;
+	window.mainHeight = document.getElementById('productImageMain').naturalHeight;
+}
+
+$(".productThumbs li").mouseover(function(){
+	$(".productThumbs li").removeClass('productThumbSelected');
+	$(this).addClass('productThumbSelected');
+});
+
+$(".productThumbs li div").mouseover(function(){
+	var img = $(this).css('background-image');
+	img = img.replace('url("',"");
+	img = img.replace('")',"");
+	img = img.replace('url(',"");
+	img = img.replace(')',"");
+	setMainImage(img);
+});
+
+$(".productThumbs li").click(function(){
+	$(".productThumbs li").removeClass('productThumbSelected');
+	$(this).addClass('productThumbSelected');
+});
+
+
+$(".productThumbs li div").click(function(){
+	var img = $(this).css('background-image');
+	img = img.replace('url("',"");
+	img = img.replace('")',"");
+	img = img.replace('url(',"");
+	img = img.replace(')',"");
+	setMainImage(img);
+});
+
+$("#productImageMain").hover(
+	function(){
+		if($(window).width() >= 800 && ($(this).width() < window.mainWidth || $(this).height() < window.mainHeight)){
+			$(".productZoom").animate({opacity: "1"}, 300);
+			$(".productImageHover").animate({opacity: ".7"}, 300);
+			if($("#ISR_button")){$("#ISR_button").css('opacity','0');}
+		}
+	},
+	function(){
+		$(".productZoom").animate({opacity: "0"}, 300);
+		$(".productImageHover").animate({opacity: "0"}, 300);
+		if($("#ISR_button")){$("#ISR_button").animate({opacity: "1"}, 600);}
+	}
+);
+
+$("#productImageMain").mousemove(function(e){
+
+		var marginLeft = $(this).offset().left - $(this).parent().offset().left
+		var marginTop  = $(this).offset().top - $(this).parent().offset().top
+
+		var zoomWidth = $(".productZoom").width();
+		var zoomHeight = $(".productZoom").height();
+
+		var imgWidth  = $(this).width();
+		var imgHeight = $(this).height();
+
+		if(imgWidth < window.mainWidth || imgHeight < window.mainHeight){
+			var hoverBoxWidth 	= imgWidth*zoomWidth/window.mainWidth;
+			var offsetLeft = e.pageX - $(this).parent().offset().left - hoverBoxWidth/2;
+			var hoverBoxLeft	= Math.max(marginLeft, Math.min(offsetLeft, imgWidth - hoverBoxWidth + marginLeft));
+			offsetLeft = hoverBoxLeft - marginLeft;
+
+			var hoverBoxHeight 	= imgHeight*zoomHeight/window.mainHeight;
+			var offsetTop = e.pageY - $(this).parent().offset().top - hoverBoxHeight/2;
+			var hoverBoxTop	= Math.max(marginTop, Math.min(offsetTop, imgHeight - hoverBoxHeight + marginTop));
+			offsetTop = hoverBoxTop - marginTop;
+
+			var bgLeft = -1*offsetLeft/imgWidth*window.mainWidth;
+			var bgTop = -1*offsetTop/imgHeight*window.mainHeight;
+
+			$(".productImageHover").css('width',hoverBoxWidth);
+			$(".productImageHover").css('left',hoverBoxLeft);
+			$(".productImageHover").css('height',hoverBoxHeight);
+			$(".productImageHover").css('top',hoverBoxTop);
+			$(".productZoom").css('background-position-x',bgLeft);
+			$(".productZoom").css('background-position-y',bgTop);
+		}
+});
+
+function productTab(tab){
+}
+
+$(".productTabs li").click(function(){
+	var id = $(this).attr('data-id');
+	$("#tabHeader1").css('display','none');
+	$(".productTab").css('display','none');
+	$(".productTabs li").css('border','1px solid #fff');
+	$(".productTabs li").css('background','#fff');
+	$(".productTabs li").css('border-bottom','1px solid #ccc');
+	$(this).css('border','1px solid #ccc');
+	$(this).css('background','#eee');
+	$("#tabBody" + $(this).attr('data-id')).css('display','block');
+});
+
+
+/************************** SET PRODUCT DESCRIPTION AND HIDE SHOW MORE FOR SHORT DESCRIPTION **************************/
+window.descriptionHeight = $(".productDescriptionFrame").height();
+if($(".productDescription").height() <= window.descriptionHeight){
+	$(".productDescriptionMore").css('display','none');
+}
+
+function descriptionMore(){
+
+    var top = document.getElementById('productDescriptionFull').offsetTop - 100; //Getting Y of target element
+	$("html, body").animate({ scrollTop: top });
+
+
+	if($(".productDescriptionMore").html() == 'Read More...'){
+//		$(".productDescriptionFrame").css('max-height','3000px');
+//		$(".productDescriptionMore").html('Show Less...');
+//		$(".productDescriptionFrame").css('padding-bottom','30px');
+//		if($(window).width() > 800){
+//			$(".productDescriptionFrame").css('box-shadow','0px 0px 10px #000');
+//		}
+	} else {
+//		$(".productDescriptionFrame").css('max-height',window.descriptionHeight);
+//		$(".productDescriptionMore").html('Read More...');
+//		$(".productDescriptionFrame").css('padding-bottom','0px');
+//		$(".productDescriptionFrame").css('box-shadow','0px 0px 0px #000');
+	}
+}
+
+function togglePreorder(){
+	if($(".preorderHowText").css('height') == '0px'){
+		$(".preorderHowText").css('height','auto');
+		$(".preorderHowText").css('width',$(".productBuybox").width() - 20);
+	} else {
+		$(".preorderHowText").css('height','0px');
+	}
+}
+
+function sleep(miliseconds) {
+   var currentTime = new Date().getTime();
+  while (currentTime + miliseconds >= new Date().getTime()) {
+   }
+}
+
+var getBuylist = setInterval(function(){
+	if(window.ajaxQueue == 0){
+		clearInterval(getBuylist);
+		var url = 'https://tools.toywiz.com/buylist/json_info.php?id={{product.sku}}';
+		getJSON(url,'setBuylist');
+	}
+},100);
+
+/************************** CHECK BUYLIST RESULT **************************/
+function setBuylist(json){
+	if(json.buy == 1){
+		$("#sellUsYours").css('display','block');
+		{{#if product.out_of_stock}}
+		$("#tabHeader1").css('display','none');
+		$(".productTab").css('display','none');
+		$(".productTabs li").css('border','1px solid #fff');
+		$(".productTabs li").css('background','#fff');
+		$(".productTabs li").css('border-bottom','1px solid #ccc');
+		$("#sellUsYours").css('border','1px solid #ccc');
+		$("#sellUsYours").css('background','#eee');
+		$("#tabBody4").css('display','block');
+		{{/if}}
+	}
+
+
+	//RECALL RECENTLY VIEWED ITEMS
+	getJSON('https://tools.toywiz.com/bigcommerce/recentlyViewed.php?id={{product.id}}','setRecentlyViewed');
+
+}
+
+/************************** SET RECENTLY VIEWED PRODUCTS **************************/
+function setRecentlyViewed(products){
+	var featuredRecent  = [];
+	for(i = 0; i < products.length; i++){
+		featuredRecent.push(products[i].id);
+		featured[products[i].id] = {
+			'id':products[i].id,
+			'sku':products[i].sku,
+			'name':products[i].name,
+			'url':products[i].url,
+			'brand':products[i].brand,
+			'image':products[i].image.replace('{:size}','600x600'),
+			'preorder':products[i].preorder,
+			'price':products[i].price,
+			'oos':products[i].oos,
+		};
+	}
+	setFeatured('recent',featuredRecent,'1');
+}
+
+var test = '{{product.upc.length}}';
+
+</script>
+{{#if product.price.without_tax.value ">" 0}}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{#contains product.title '"'}}{{#replace '"' product.title}}&quot;{{/replace}}{{else}}{{product.title}}{{/contains}}",
+  "image": [
+	{{#each (limit product.images 5)}}
+	"{{getImage this 'zoom' (cdn ../theme_settings.default_image_product)}}"{{#unless @last}},{{/unless}}
+	{{/each}}
+   ],
+  "description": "{{#contains product.description '"'}}{{#replace '"' product.description}}&quot;{{/replace}}{{else}}{{product.description}}{{/contains}}",
+  "sku": "{{product.sku}}",
+  {{#if product.upc.length "==" 12}}"gtin12":"{{product.upc}}",{{/if}}
+  {{#if product.upc.length "==" 13}}"gtin13":"{{product.upc}}",{{/if}}
+  "mpn": "",
+  "brand": {
+    "@type": "Thing",
+    "name": "{{#each product.custom_fields}}{{#if name "==" "Company"}}{{{value}}}{{/if}}{{/each}}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{product.url}}",
+    "priceCurrency": "USD",
+    "price": "{{product.price.without_tax.value}}",
+    "itemCondition": "http://schema.org/NewCondition",
+    "availability": "{{#if product.can_purchase}}{{#if product.pre_order}}PreOrder{{else}}InStock{{/if}}{{else}}OutOfStock{{/if}}",
+    "seller": {
+      "@type": "Organization",
+      "name": "ToyWiz"
+    }
+  }
+}
+
+</script>
+
+{{/if}}
+<script type="text/javascript"> 
+var _learnq = _learnq || []; 
+
+ var item = {
+   Name: "{{product.title}}", 
+   ProductID: "{{product.id}}",
+   ImageURL: "{{getImage product.main_image 'product_size' (cdn theme_settings.default_image_product)}}", 
+   URL: "{{product.url}}",
+   Brand: "{{product.brand.name}}", 
+   Price: "{{product.price.without_tax.value}}",
+   CompareAtPrice: "{{product.price.rrp_without_tax.value}}"
+  };
+
+_learnq.push(['track', 'Viewed Product', item]); 
+
+_learnq.push(['trackViewedItem', {
+   Title: item.Name, 
+   ItemId: item.ProductID,
+   ImageUrl: item.ImageURL, 
+   Url: item.URL,
+
+   Metadata: { 
+     Brand: item.Brand,
+     Price: item.Price, 
+     CompareAtPrice: item.CompareAtPrice
+ } 
+ }]);
+</script>
+<script src="https://instocknotify.blob.core.windows.net/stencil/6020c4dd-1a86-4fe4-8025-32ffc911a30b.js?ts=08605015" type="text/javascript"></script>

@@ -1,0 +1,25 @@
+---
+products:
+    new:
+        limit: 100
+    featured:
+        limit: 100
+    top_sellers:
+        limit: 100
+categories: false
+categories:
+    description: false
+category:
+    description: false
+    shop_by_price: true
+    products:
+        limit: 400
+---
+{{#partial "page"}}
+[
+{{#each category.products}}
+{"id":{{id}},"name":"{{name}}","brand":"{{brand.name}}","url":"{{url}}","image":"{{getImage image 'product' (cdn theme_settings.default_image_product)}}"{{#each custom_fields}}{{#if name "==" "Company"}},"company":"{{value}}"{{/if}}{{#if name "==" "Category"}},"category":"{{value}}"{{/if}}{{#if name "==" "Status"}},"status":"{{value}}"{{/if}}{{#if name "==" "Filter"}},"filter":"{{value}}"{{/if}}{{/each}},"preorder":"{{pre_order}}","kw":"{{#each custom_fields}}{{#if name "==" "Keyword"}}{{value}}{{/if}}{{/each}}","price":"{{price.without_tax.value}}"}{{#unless @last}},{{/unless}}
+{{/each}}
+]
+{{/partial}}
+{{> layout/json}}

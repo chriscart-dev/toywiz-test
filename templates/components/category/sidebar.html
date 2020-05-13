@@ -1,0 +1,15 @@
+<center><a href="{{#each (limit breadcrumbs 2)}}{{#if @last}}{{url}}{{/if}}{{/each}}"><img src="" id="categoryLogo"/></a></center>
+<script>
+window.section = "{{#each (limit breadcrumbs 2)}}{{#if @last}}{{name}}{{/if}}{{/each}}";
+</script>
+<div class="leftSearch" onclick="showFilters('all');"><span class="mobileOnly hideFilters">HIDE FILTERS</span><span class="mobileOnly showFilters">SHOW FILTERS</span><span class="mobileHide">FILTER BY:</span></div>
+{{> components/faceted-search/index category}}
+
+
+
+<div class="categoryId mobileHide">Category #{{category.id}}</div>
+
+<center><div style="width: 160px; height: 600px; margin-top: 46px; margin-bottom: 14px;" class="mobileHide">
+
+
+</div></center>

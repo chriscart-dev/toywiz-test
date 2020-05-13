@@ -1,0 +1,49 @@
+<table class="table table--line wishlists-table">
+    <thead class="table-thead">
+        <tr>
+            <th class="leftAlign">{{lang 'account.wishlists.name'}}</th>
+            <th class="td--small">{{lang 'account.wishlists.num_items'}}</th>
+            <th class="td--small">{{lang 'account.wishlists.shared'}}</th>
+            <th>{{lang 'account.wishlists.action'}}</th>
+        </tr>
+    </thead>
+    <tbody class="table-tbody">
+    {{#each customer.wishlists}}
+        <tr>
+            <td align="left" style="text-align: left;"><a href="{{view_url}}">{{name}}</a></td>
+            <td class="td--small">{{num_items}}</td>
+            <td class="td--small">
+                {{#if is_public }}
+                    {{lang 'common.yes'}}
+                {{else}}
+                    {{lang 'common.no'}}
+                {{/if}}
+            </td>
+            <td class="table-actions" style="text-align: right;">
+                <form method="post" action="{{delete_url}}" class="form">
+                    <fieldset class="form-fieldset">
+				{{#if num_items ">" 0}}
+				<a href="{{view_url}}" class="button button--primary button--small" role="button">View</a>
+				{{/if}}
+                        {{#if is_public}}
+                            <a href="{{share_url}}" class="button button--primary button--small"
+                           role="button">{{lang 'common.share'}}</a>
+                        {{/if}}
+                        <a href="{{edit_url}}" class="button button--small" data-wishlist>{{lang 'common.edit'}}</a>
+                        <input type="submit" value="{{lang 'common.delete'}}" class="button button--small button--input" data-wishlist-delete>
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+<form method="post" action="{{this.urls.account.wishlists.delete}}" class="form">
+    {{#unless customer.wishlists}}
+        <p class="form-actions">{{> components/common/alert-info (lang 'account.wishlists.you_have_none')}}</p>
+
+    {{/unless}}
+    <div class="form-actions" style="max-width: 800px;">
+        <a href="{{this.urls.account.wishlists.add}}" class="button button--primary" role="button" data-wishlist>{{lang 'account.wishlists.new'}}</a>
+    </div>
+</form>

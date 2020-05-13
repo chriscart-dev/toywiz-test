@@ -1,0 +1,97 @@
+{{#partial "page"}}
+
+{{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+<h2 class="page-heading title">{{lang 'account.orders.details.heading' number=order.id}}</h2>
+{{> components/account/navigation account_page='orders'}}
+
+{{#each order.status_messages}}
+	{{> components/common/alert-info message}}
+{{/each}}
+
+<div class="sectionTitle">Order Details</div>
+<div class="orderInfo">
+	Order# {{order.id}}<span class="orderDivider">|</span>Ordered on {{order.date}}<span class="orderDivider">|</span><span class="order{{order.status_text}}">{{#if order.status_text "==" "Awaiting Payment"}}Payment Authorized{{else}}{{order.status_text}}{{/if}}</span><br/>
+</div>
+{{#each shipments}}
+<div class="orderInfoSub orderShipped" id="shipment{{@index}}"></div>
+<script>
+	var tracking = '{{shipping_track.number}}';
+	var method		 = '';
+	var url		 	= '';
+	if(tracking.substring(0,2) == '1Z'){
+		method = 'UPS ';
+		url = 'https://wwwapps.ups.com/WebTracking/track?trackNums=' + tracking + '&track.x=Track';
+	} else if(tracking.substring(0,1) == '8'){
+		method = 'UPS Mail Innovations ';
+		url = 'https://wwwapps.ups.com/WebTracking/track?trackNums=' + tracking + '&track.x=Track';
+	} else if(tracking.substring(0,1) == '9'){
+		method = 'USPS ';
+		url = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=' + tracking;
+	}
+	var html = 'Your package shipped ' + method + 'on {{date_shipped}}';
+	if(url != ''){html += ' with tracking number <a href="' + url + '" target="_blank">' + tracking + '</a>';}
+	$("#shipment{{@index}}").html(html);
+</script>
+{{/each}}
+<div class="orderDetails">
+	<div class="orderDetailsBlock">
+		<li><label>Shipping Address</label></li>
+		<li>{{order.shipping_address.full_name}}</li>
+		<li>{{order.shipping_address.company}}</li>
+		<li>{{order.shipping_address.address_lines.[0]}}</li>
+		<li>{{order.shipping_address.address_lines.[1]}}</li>
+		<li>{{order.shipping_address.city}}, {{order.shipping_address.state}} {{order.shipping_address.zip}}</li>
+		<li>{{order.shipping_address.country}}</li>
+	</div>
+	<div class="orderDetailsBlock">
+		<li><label>Shipping Method</label></li>
+		<li>{{order.shipping_method}}</li>
+		<li>&nbsp;</li>
+		<li><label>Payment Method</label></li>
+		<li>{{order.payment_method}}</li>
+	</div>		
+	<div class="orderDetailsBlock">
+		<li><label>Order Summary</label></li>
+		{{#each order.total_rows}}
+		<li>{{label}}<span>{{value.formatted}}</span></li>
+		{{/each}}
+	</div>		
+	<div class="orderDetailsBlock orderDetailsBlockRight">
+		{{#each shipments}}
+		{{#if @last}}
+		<a id="trackLink" href="" target="_blank"><div class="orderButton orderTrack">Track Package</div></a>
+		<script>$("#trackLink").attr('href',url);</script>
+		{{/if}}
+		{{/each}}
+		<a href="{{order.invoice_url}}" target="_blank" class="mobileHide"><div class="orderButton">Print Invoice</div></a>
+		<a href="{{order.return_url}}"><div class="orderButton">Return Items</div></a>
+	</div>
+	<div style="width: 100%; clear: both;"></div>
+</div>
+
+<div class="ordersBlock">
+	<div class="orderRow">
+		{{#each order.items}}
+		<div class="orderBody{{#if quantity "==" 0}} orderItemCanceled{{/if}}">
+			<div class="orderItemRow">
+				<div class="orderItemImage"><img src="{{getImage image 'thumb' (cdn ../theme_settings.default_image_product)}}"/></div>
+				<div class="orderItemInfo">
+					{{name}}<br/>
+					{{#if ../order.status_text "==" "Cancelled"}}
+						<span class="orderCancelled">Item cancelled</span>
+					{{else}}
+						{{#if quantity ">" 0}}
+							<span class="orderItemPrice">x{{quantity}} @ {{price.formatted}} each</span>
+						{{else}}
+							<span class="orderCancelled">Item cancelled</span>
+						{{/if}}
+					{{/if}}
+				</div>
+			</div>
+			<div style="width: 100%; clear: both; height: 10px;"></div>
+		</div>
+		{{/each}}
+	</div>
+</div>
+{{/partial}}
+{{> layout/base accountpage="Y"}}

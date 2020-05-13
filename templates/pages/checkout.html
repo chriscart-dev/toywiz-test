@@ -1,0 +1,32 @@
+{{#partial "head"}}
+
+{{{stylesheet '/assets/css/theme.css'}}}
+{{{ checkout.checkout_head }}}
+{{{ stylesheet '/assets/css/optimized-checkout.css' }}}
+{{ getFontsCollection }}
+
+<script type="text/javascript">
+    window.language = {{{langJson 'optimized_checkout'}}};
+</script>
+
+{{{head.scripts}}}
+
+{{/partial}}
+
+{{#partial "page"}}
+<h1>test - hello</h1>
+<!-- {{{ checkout.checkout_content }}} -->
+<div id="checkout-app"></div>
+
+{{> components/common/footer}}
+{{{ footer.scripts }}}
+
+<!-- <script src="{{cdn 'assets/dist/theme-bundle.main.js'}}"></script> -->
+
+<script type="text/javascript" defer>
+    // Exported in app.js
+    window.initReact();
+</script>
+{{/partial}}
+
+{{> layout/blank}}

@@ -1,0 +1,57 @@
+    <form class="form estimator-form" data-shipping-estimator>
+	<div id="shippingEstimator" class="shipping-estimator u-hiddenVisually">
+		<div class="shippingEstimatorRow">
+			<div class="cartImage">&nbsp;</div>
+			<div class="cartProduct">&nbsp;</div>
+			<div class="cartPrice"><label>Country:</label></div>
+			<div class="cartFields">
+                <select class="form-select" id="shipping-country" name="shipping-country" data-field-type="Country">
+                    <option>{{lang 'cart.shipping_estimator.select_a_country'}}</option>
+                    {{#each countries}}
+						{{#contains "Aruba|Australia|Austria|Bahamas|Barbados|Belgium|Bermuda|Canada|Cayman Islands|Costa Rica|Denmark|Finland|France|Germany|Greece|Guam|Hong Kong|Hungary|Ireland|Israel|Italy|Jamaica|Japan|Luxembourg|Netherlands|New Zealand|Norway|Philippines|Poland|Portugal|Puerto Rico|Romania|Singapore|Spain|Sweden|Switzerland|Thailand|Turkey|United Kingdom|United States|Virgin Islands, British|Virgin Islands, U.S.|" name}}
+							<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>
+								{{name}}
+							</option>
+						{{/contains}}
+                    {{/each}}
+                </select>
+			</div>
+		</div>
+		<div class="shippingEstimatorRow">
+			<div class="cartImage">&nbsp;</div>
+			<div class="cartProduct">&nbsp;</div>
+			<div class="cartPrice"><label>State/Province:</label></div>
+			<div class="cartFields">
+                {{#if states.length}}
+                    <select class="form-select" id="shipping-state" name="shipping-state" data-field-type="State">
+                        <option>{{lang 'cart.shipping_estimator.select_a_state'}}</option>
+                        {{#each states}}
+                            <option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>
+                                {{name}}
+                            </option>
+                        {{/each}}
+                    </select>
+                {{else}}
+                    <input class="form-input" type="text" id="shipping-state" name="shipping-state" data-field-type="State" placeholder="{{lang 'cart.shipping_estimator.select_a_state'}}">
+                {{/if}}
+			</div>
+		</div>
+		<div class="shippingEstimatorRow">
+			<div class="cartImage">&nbsp;</div>
+			<div class="cartProduct">&nbsp;</div>
+			<div class="cartPrice"><label>Zip/Postal:</label></div>
+			<div class="cartFields">
+				<input class="form-input" type="text" id="shipping-zip" name="shipping-zip" value="{{selected_zip}}" placeholder="{{lang 'cart.shipping_estimator.zip_postal_code'}}"/>
+			</div>
+		</div>
+		<div class="shippingEstimatorRow">
+			<div class="cartImage">&nbsp;</div>
+			<div class="cartProduct">&nbsp;</div>
+			<div class="cartPrice"><label>&nbsp;</label></div>
+			<div class="cartFields cartEstimate"><input class="button button--primary button--small shipping-estimate-submit cartEstimateButton" type="submit" value="View Shipping Options"/></div>
+		</div>
+	</div>
+		<div class="shippingEstimatorRow">
+		    <div class="shipping-quotes"></div>
+		</div>
+    </form>

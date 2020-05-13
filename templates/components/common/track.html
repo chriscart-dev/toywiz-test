@@ -1,0 +1,64 @@
+<style>
+.inputSearch {margin-top: 10px; width: 380px; border: 1px solid #775535; border-radius: 10px 0px 0px 10px; height: 40px; font: 16px Lato; color: #555654; padding-left: 6px; float: left;}
+.inputTrack {margin-top: 10px; width: 60px; border: 1px solid #775535; background: #775535; border-radius: 0px 10px 10px 00px; height: 40px; font: 16px Lato; color: #ffffff; cursor: pointer; padding-left: 0px; float: left; text-align: center; line-height: 2.2em;}
+#trackResults {clear: both; padding-top: 10px; font: 16px lato;}
+</style>
+<script>
+function getJSON(url,theFunction){
+	$.ajax({type: 'GET', url: url, async: true, jsonpCallback: 'jsonCallback', contentType: "application/json", dataType: 'jsonp', timeout: 20000, cache: false,
+    	success: function(json){window[theFunction](json);},
+    	error: function(e,i,k) {}
+    });
+}
+
+function trackKey(e)
+{
+	if (window.event) { e = window.event; }
+	if (e.keyCode == 13) {
+		checkTracking();
+	}
+}
+
+function checkTracking()
+{
+	var search = document.getElementById('trackSearch').value;
+	if(search.indexOf('@') > 0){
+		getJSON('https://tools.toywiz.com/yahoo/json_track.php?search=' + search,'trackResults');
+	} else if(search.length < '10' || search.indexOf('dragonballzcentral') >= 0){
+		getJSON('https://tools.toywiz.com/yahoo/json_track.php?search=' + search,'trackResults');
+	} else if(search.substring(0, 1) == '9' || search.substring(0, 1) == 'C' || search.substring(0, 1) == 'L' || search.substring(0, 1) == 'E' || search.substring(0, 2) == '03'){
+		$("#trackResults").html('<a href="' + "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=" + search + '" target="_blank">Click <span style="color: #ff0000;">here</span> to track your package</a>');
+		window.open("https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=" + search);
+	} else if(search.substring(0, 2) == '1Z' || search.substring(0, 2) == '80'){
+		$("#trackResults").html('<a href="' + "https://wwwapps.ups.com/WebTracking/track?trackNums=" + search + '&track.x=Track" target="_blank">Click <span style="color: #ff0000;">here</span> to track your package</a>');
+		window.open("https://wwwapps.ups.com/WebTracking/track?trackNums=" + search + '&track.x=Track');
+	} else if(search.substring(0, 2) == '00'){
+		getJSON('https://tools.toywiz.com/yahoo/json_track.php?search=' + search,'trackResults');
+	}
+}
+
+
+function trackResults(json){
+	var track = json.tracking;
+	if(track.substring(0, 1) == '9' || track.substring(0, 1) == 'C' || track.substring(0, 1) == 'L' || track.substring(0, 1) == 'E' || track.substring(0, 2) == '03'){
+		$("#trackResults").html('<a href="' + "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=" + track + '" target="_blank">Click <span style="color: #ff0000;">here</span> to track your package</a>');
+		window.open("https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=" + track,'_blank');
+	} else if(track.substring(0, 2) == '1Z' || track.substring(0, 2) == '80'){
+		$("#trackResults").html('<a href="' + "https://wwwapps.ups.com/WebTracking/track?trackNums=" + track + '&track.x=Track" target="_blank">Click <span style="color: #ff0000;">here</span> to track your package</a>');
+		window.open("https://wwwapps.ups.com/WebTracking/track?trackNums=" + track + '&track.x=Track','_blank');
+	} else if(track == ''){
+		$("#trackResults").html('There is no tracking information available yet.');
+	} else if(track.substring(0, 2) == '00'){
+		$("#trackResults").html('Your package was shipped first-class mail on ' + json.date + '. No tracking information is available.');
+	}
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+document.getElementById('trackSearch').value = getParameterByName('s');
+</script>

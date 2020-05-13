@@ -1,0 +1,145 @@
+---
+categories: false
+categories:
+    description: false
+category:
+    description: false
+    shop_by_price: true
+    products:
+        limit: {{theme_settings.categorypage_products_per_page}}
+---
+{{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
+{{#partial "head"}}
+    {{#if pagination.category.previous}}
+        <link rel="prev" href="{{pagination.category.previous}}">
+    {{/if}}
+    {{#if pagination.category.next}}
+        <link rel="next" href="{{pagination.category.next}}">
+    {{/if}}
+{{/partial}}
+
+{{#partial "page"}}
+<script>var pageType = 'section';</script>
+{{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+<div class="leftSidebar">
+	{{> components/category/sidebar}}
+</div>
+
+<div class="section">
+	<div class="sectionTitle">{{{category.description}}}</div>
+	<div class="sectionDescription"></div>
+
+	{{#if category.selected.remove_all_url}}
+	{{else}}
+	<div id="homeFeatured-section" class="homeFeatured" style="display: none;">
+		<div class="productsHeader"><span>FEATURED <bold>PRODUCTS</bold></span></div>
+		<div class="productsRow-previous-arrow featured-section-arrow" onclick="productsScroll('featured-section','-1',window.productCounts['section']);" id="previous-arrow-featured-section" style="opacity: 0;"></div>
+		<div id="featured-section" class="productsRow featured-products-full productBlock-minimized">
+			<div id="featured-sectionFrame" class="featuredFrame">
+				<div id="featured-sectionInner" class="productsRow-inner">
+					<div class="productBlock">
+						<img class="loadingImage" src="{{cdn '/assets/img/loading.gif'}}"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="productsRow-next-arrow feature-pre-arrow" onclick="productsScroll('featured-section','1',window.productCounts['section']);" id="next-arrow-featured-section"></div>
+	</div>
+	<style>
+	@media all and (min-width: 601px){
+		#featured-sectionInner .productBlock {width: 150px; height: 220px;} 
+		#featured-sectionInner .productImg {height: 150px;}
+		#featured-sectionInner .productText {height: 50px;}
+		#featured-section {height: 236px;}
+
+    	#featured-sectionInner .productBlock .productPrice {height: 22px; font-size: 18px; padding-top: 2px; position: relative; background: none; width: 100%; bottom: 2px; opacity: 1; display: none;}
+    	#featured-sectionInner .productBlock .productCart {height: 14px; position: relative; bottom: 6px; opacity: 1; display: none; font-size: 14px;}
+
+    	#featured-sectionInner .productBlock:hover .productPrice {display: block;}
+    	#featured-sectionInner .productBlock:hover .productCart {display: block;}
+    	#featured-sectionInner .productBlock:hover .productText {display: none;}
+	
+	}		
+	</style>
+	{{/if}}
+	<div style="width: 100%; clear: both;"></div>
+
+
+{{#if category.subcategories}}
+	{{#if category.selected.remove_all_url}}
+		{{> components/category/product-listing}}
+	{{else}}
+	<div class="productsHeader sectionsHeader"><span><plain>{{name}} </plain><bold>SECTIONS</bold></span></div>
+	<div class="productsRow section-blocks">
+		{{#each category.subcategories}}
+		<a href="{{url}}" alt="{{name}}"><div class="productBlock">
+			<div class="productImg"><img src="{{getImage image}}"/></div>
+			<div class="productText"><div>{{name}}</div></div>
+		</div></a>
+		{{/each}}
+	</div>
+	{{/if}}
+{{else}}
+	{{#if category.products}}
+		{{> components/category/product-listing}}
+	{{else}}
+		<p>{{lang 'categories.no_products'}}</p>
+	{{/if}}
+{{/if}}
+
+<script>
+var keywords = document.getElementsByName('keywords')[0].getAttribute('content');
+if(keywords.indexOf('featured-products') > 0){
+	$("#homeFeatured-section").css('display','block');
+	$(".sectionsHeader").css('display','block');
+}
+
+
+var getFeaturedSection = setInterval(function(){
+	if(window.ajaxQueue == 0){
+		clearInterval(getFeaturedSection);
+		var theUrl = '{{#each currency_selector.currencies}}{{#if @first}}{{switch_url}}{{/if}}{{/each}}';
+		theUrl = theUrl.replace('https://toywiz.com','');
+		theUrl = theUrl.substring(1, 1000);
+		if(theUrl.indexOf('/') > 0){
+			theUrl = theUrl.substring(0, theUrl.indexOf('/'));
+		} else {
+			theUrl = theUrl.substring(0, theUrl.indexOf('?'));
+		}
+		var breadcrumbCount = '{{breadcrumbs.length}}';
+		var keywords = document.getElementsByName('keywords')[0].getAttribute('content');
+		if(breadcrumbCount == '2' && keywords.indexOf('featured-products') > 0){
+			getJSON('https://www.toywiz.com/featured-products/featured-' + theUrl + '/','featuredSection');
+		}
+	}
+},500);
+
+window.sectionBlockWidth = $(".section-blocks .productBlock").outerWidth();
+
+function featuredSection(json){
+	featured = {};
+	var featuredSection = [];
+	for(i = 0; i < json.length; i++){
+		var thisProduct = json[i];
+		if(thisProduct.price > 0){
+			featuredSection.push(thisProduct.id);
+			featured[thisProduct.id] = {
+				'id':thisProduct.id,
+				'sku':thisProduct.sku,
+				'name':thisProduct.name,
+				'url':thisProduct.url,
+				'brand':thisProduct.brand,
+				'image':thisProduct.image,
+				'preorder':thisProduct.preorder,
+				'price':thisProduct.price
+			};
+		}
+	}
+	$("#homeFeatured-section").css('display','block');
+	window.productCounts = {};
+	setFeatured('section',featuredSection,'1');
+	windowResize();
+}
+</script>
+{{/partial}}
+{{> layout/base categorypage="Y"}}

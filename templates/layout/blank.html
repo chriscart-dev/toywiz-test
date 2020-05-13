@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="no-js">
+	<script>var desc = '{{category.description}}'; if(desc.substring(0,1) == "/"){window.location.assign(desc);}</script>
+
+    <head>
+        <title>{{ head.title }}</title>
+        {{{ head.meta_tags }}}
+        {{{ head.config }}}
+        {{#block "head"}} {{/block}}
+        <link href="{{ head.favicon }}" rel="shortcut icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        {{{stylesheet '/assets/css/theme.css'}}}
+        {{ getFontsCollection }}
+        <script src="{{cdn '/assets/modernizr-custom.js'}}"></script>
+
+        {{{head.scripts}}}
+        {{{head.rsslinks}}}
+
+        {{inject 'themeImageSizes' theme_settings._images}}
+        {{inject 'genericError' (lang 'common.generic_error')}}
+        {{inject 'maintenanceMode' settings.maintenance}}
+        {{inject 'urls' urls}}
+        {{{snippet 'htmlhead'}}}
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script src="https://cdn6.bigcommerce.com/s-0kvv9/product_images/elements/noframework.waypoints.min.js"></script>
+		<script src="https://cdn6.bigcommerce.com/s-0kvv9/template/Styles/bigcommerce.js"></script>
+		<link rel="stylesheet" href="https://cdn6.bigcommerce.com/s-0kvv9/template/Styles/bigcommerce20160714b.css">
+        {{> components/common/badges }}
+    </head>
+    <body>
+        {{> components/common/body }}
+
+        <script src="{{cdn '/assets/js/bundle.js'}}"></script>
+        <script>
+            window.stencilBootstrap("{{template_file}}", {{jsContext}}).load();
+        </script>
+
+		{{#unless cartpage}}
+			<script>window.stencilBootstrap("pages/product").load();</script>
+		{{/unless}}
+
+    </body>
+</html>
+
+

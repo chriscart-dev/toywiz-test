@@ -1,0 +1,40 @@
+<div class="sectionTitle">Your Returns</div>
+<div class="ordersBlock">
+{{#each returns}}
+	<div class="orderRow">
+		<div class="orderHeader">
+			<div class="orderHeaderField">
+				<label>DATE REQUESTED</label><br/>
+				{{date_requested}}
+			</div>
+			<div class="orderHeaderField">
+				<label>RETURN ACTION</label><br/>
+				{{action}}
+			</div>
+			<div class="orderHeaderField">
+				<label>RETURN REASON</label><br/>
+				{{reason}}
+			</div>
+			<div class="orderHeaderField">
+				<label>STATUS</label><br/>
+				<span class="orderStatus {{status}}">
+				{{#replace "ReturnStatus" status}}{{/replace}}	
+				</span>
+			</div>
+			<div class="orderHeaderField">
+				<label>RA NUMBER</label><br/>
+				#{{id}}
+			</div>
+		</div>
+		<div class="orderBody">
+			<div class="orderItemRow">
+				<div class="orderItemImage"><a href="{{product.url}}"><img src="{{getImage product.image 'thumb' (cdn ../theme_settings.default_image_product)}}"/></a></div>
+				<div class="orderItemInfo">
+					Returning x{{quantity}} <a href="{{product.url}}">{{product.name}}</a><br/>
+					{{#if comments}}<span class="orderItemNotes">Your comments: <i>{{comments}}</i></span>{{/if}}
+				</div>
+			</div>
+		</div>
+		<div class="linebreak"></div>
+	</div>
+{{/each}}

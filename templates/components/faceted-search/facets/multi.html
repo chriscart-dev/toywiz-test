@@ -1,0 +1,65 @@
+{{#if items.length ">" "1"}}
+{{#if title "==" "Filter"}}
+<div id="filterFilter"></div>
+{{else}}
+<div id="filter{{facet}}" class="filterBlockXXX" style="display: block;">
+<div class="accordion-block">
+	<div class="filterHeader"><span>{{title}}</span><div id="" class="fiterHeaderTriangle fiterHeaderTriangle-rotate">&#9654;</div></div>
+    <div class="accordion-navigation toggleLink {{#unless ../start_collapsed }} is-open {{/unless}}" role="button" data-collapsible="#facetedSearch-content--{{ facet }}" onclick="toggleFilters('{{title}}','{{items.length}}');">
+        <h5 class="accordion-title">
+        	<div id="accordion-triangle-{{title}}" class="accordion-triangle">&#9654;</div>
+        </h5>
+
+        <div class="accordion-navigation-actions">
+            {{#if selected}}
+                <a href="{{ remove_url }}" class="facetedSearch-clearLink" data-faceted-search-facet rel="nofollow">{{lang 'search.faceted.clear'}}</a>
+				<script>
+				showFilter.push('{{facet}}');
+				filterCount.push('{{items.length}}');
+				</script>
+            {{/if}}
+            <svg class="icon accordion-indicator toggleLink-text toggleLink-text--off">
+                <use xlink:href="#icon-add" />
+            </svg>
+            <svg class="icon accordion-indicator toggleLink-text toggleLink-text--on">
+                <use xlink:href="#icon-remove" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="filterBlock" style="display: block;" id="accordion-content-{{title}}" class="accordion-content {{#unless ../start_collapsed }} is-open {{/unless}}">
+        <ul id="facetedSearch-navList--{{ facet }}" data-facet="{{facet}}" class="navList" data-has-more-results="{{ has_more_results }}">
+            {{#each items}}
+                <li class="navList-item">
+                    <a
+                        href="{{ url }}"
+                        class="navList-action navList-action--checkbox {{#if selected }} is-selected {{/if}}"
+                        data-faceted-search-facet rel="nofollow">
+                        {{ title }}
+                            <span>({{ count }})</span>
+                        {{#if ../show_product_counts}}
+                        {{/if}}
+
+                        <span class="navList-action-close" aria-hidden="true">
+                            <svg class="icon">
+                                <use xlink:href="#icon-close"/>
+                            </svg>
+                        </span>
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+
+        {{#if show_more_toggle}}
+            <a href="#facetedSearch-navList--{{ facet }}" role="button" class="toggleLink" rel="nofollow">
+                <span class="toggleLink-text toggleLink-text--off">{{lang 'search.faceted.show-more'}}</span>
+            </a>
+        {{/if}}
+    </div>
+</div>
+</div>
+{{/if}}
+{{/if}}
+{{#if title "==" "Filter"}}
+<script>$(document).ready(fireWhenReady('{{title}}','closed'));</script>
+{{/if}}

@@ -1,0 +1,43 @@
+<style>.page-heading {display: none;}</style>
+
+<div class="navbar--mobile">
+	Navigate to: <select onchange="window.open(this.value,'_self');">
+	<option value="{{urls.account.orders.all}}"{{#if account_page '===' 'orders'}} selected{{/if}}>Orders</option>
+	{{#if settings.returns_enabled}}
+	<option value="{{urls.account.returns}}"{{#if account_page '===' 'returns'}} selected{{/if}}>{{lang 'account.nav.returns'}}</option>
+	{{/if}}
+	<option value="{{urls.account.inbox}}"{{#if account_page '===' 'messages'}} selected{{/if}}>{{lang 'account.nav.messages' num_new_messages=customer.num_new_messages}}</option>
+	<option value="{{urls.account.addresses}}"{{#if account_page '===' 'addresses'}} selected{{/if}}>{{lang 'account.nav.addresses'}}</option>
+	{{#if settings.show_wishlist}}
+	<option value="{{urls.account.wishlists.all}}"{{#if account_page '===' 'wishlists'}} selected{{/if}}>{{lang 'account.nav.wishlists' num_wishlists=customer.num_wishlists}}</option>
+	{{/if}}
+	<option value="{{urls.account.details}}"{{#if account_page '===' 'settings'}} selected{{/if}}>{{lang 'account.nav.settings'}}</option>
+	</select>
+</div>
+
+<nav class="navBar navBar--sub navBar--account">
+    <ul class="navBar-section">
+		<li class="navBar-item{{#if account_page '===' 'orders'}} is-active{{/if}}">
+			<a class="navBar-action" href="{{urls.account.orders.all}}">Orders</a>
+		</li>
+        {{#if settings.returns_enabled}}
+			<li class="navBar-item{{#if account_page '===' 'returns'}} is-active{{/if}}">
+				<a class="navBar-action" href="{{urls.account.returns}}">{{lang 'account.nav.returns'}}</a>
+			</li>
+		{{/if}}
+		<li class="navBar-item">
+			<a class="navBar-action{{#if account_page '===' 'messages'}} is-active{{/if}}" href="{{urls.account.inbox}}">{{lang 'account.nav.messages' num_new_messages=customer.num_new_messages}}</a>
+		</li>
+		<li class="navBar-item{{#if account_page '===' 'addresses'}} is-active{{/if}}">
+			<a class="navBar-action" href="{{urls.account.addresses}}">{{lang 'account.nav.addresses'}}</a>
+		</li>
+        {{#if settings.show_wishlist}}
+			<li class="navBar-item{{#if account_page '===' 'wishlists'}} is-active{{/if}}">
+				<a class="navBar-action" href="{{urls.account.wishlists.all}}">{{lang 'account.nav.wishlists' num_wishlists=customer.num_wishlists}}</a>
+			</li>
+        {{/if}}
+		<li class="navBar-item {{#if account_page '===' 'settings'}} is-active{{/if}}">
+			<a class="navBar-action" href="{{urls.account.details}}">{{lang 'account.nav.settings'}}</a>
+		</li>
+    </ul>
+</nav>

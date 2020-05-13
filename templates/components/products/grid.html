@@ -1,0 +1,38 @@
+<div style="width: 100%; clear: both;"></div>
+<div class="productsGrid">
+{{#each products}}
+	{{>components/products/card show_compare=../show_compare show_rating=../settings.show_product_rating theme_settings=../theme_settings}}
+{{/each}}
+</div>
+
+
+<script>
+window.paginationCurrent = 1;
+
+$(window).scroll(function () { 
+	var elem = "#endProductGrid";
+	var docViewTop = $(window).scrollTop();
+	var docViewBottom = docViewTop + $(window).height();
+	var elemTop = $(elem).offset().top;
+	var elemBottom = elemTop + $(elem).height();
+	if((elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <=      docViewBottom) && (elemTop >= docViewTop)){
+		//getMoreProducts();
+	}
+});
+
+function getMoreProducts(){
+	if(window.paginationCurrent < window.paginationTotal){
+		var nextPage = parseInt(window.paginationCurrent) + 1;
+		var theURL = window.paginationURL;
+		theURL = theURL.substring(0, theURL.length - 1) + nextPage;
+		theURL = theURL.replace('&amp;', '&');
+		$.get(theURL, function(data, status){
+			html = data.substring(data.indexOf('<ul class="productGrid"'), 1000);
+			//alert(html);
+		});
+	}
+}
+
+
+</script>
+

@@ -1,0 +1,24 @@
+<div class="sectionTitle">Messages</div>
+<div class="ordersBlock messagesBlock">
+{{#each messages}}
+	<div class="orderRow">
+		<div class="orderHeader">
+			<div class="orderHeaderField">
+				{{date}}
+			</div>
+		</div>
+		<div class="orderBody">
+			<div class="orderItemRow">
+				<span class="messageSubject">{{subject}}</span><br/>
+				<i>
+				{{#if is_reply}}
+					{{lang 'account.messages.merchant_said' store_name=../../settings.store_name}}
+				{{else}}
+					{{lang 'account.messages.customer_said'}}
+				{{/if}}
+				</i>
+				{{message}}
+			</div>
+		</div>
+	</div>
+{{/each}}

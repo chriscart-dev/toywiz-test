@@ -1,0 +1,70 @@
+<div class="category-featured">
+	<div class="category-featured-header">Featured Products</div>
+	<div class="tabs-contents category-featured-contents" style="">
+		<div role="tabpanel" aria-hidden="false" class="tab-content has-jsContent is-active" id="category-featured-products">
+		Loading...
+		</div>
+	</div>
+</div>
+
+
+<script>
+var theUrl = '{{category.url}}';
+theUrl = theUrl.replace('https://toywiz.com/', '');
+theUrl = 'https://toywiz.com/featured-products/featured-' + theUrl;
+getJSON(theUrl,'getFeatured');
+
+function getFeatured(json){
+	var html = '	<section class="productCarousel" data-slick=\'{"dots": false, "infinite": false, "mobileFirst": true, "slidesToShow": 2, "slidesToScroll": 2, "responsive": [ { "breakpoint": 1450, "settings": { "slidesToScroll": 4, "slidesToShow": 5 } }, { "breakpoint": 1200, "settings": { "slidesToScroll": 3, "slidesToShow": 4 } }, { "breakpoint": 1040, "settings": { "slidesToScroll": 3, "slidesToShow": 3 } }, { "breakpoint": 500, "settings": { "slidesToScroll": 2, "slidesToShow": 2 } }, { "breakpoint": 10, "settings": { "slidesToScroll": 1, "slidesToShow": 1 } } ] }\'>';
+	for(i = 0; i < json.length; i++){
+		if(json[i].price > 0){
+			html += '		<div class="productCarousel-slide">';
+			html += '			<center>';
+			html += '			<article class="card ">';
+			html += '				<a href="' + json[i].url + '">';
+			html += '					<figure class="card-figure">';
+			html += '						<div class="card-image category-featured-card-image" style="background-image:url(\'' + json[i].image + '\');"></div>';
+			html += '						<figcaption class="card-figcaption">';
+//			html += '							<div class="card-figcaption-body">';
+//			html += '								<a href="#" class="button button--small card-figcaption-button quickview" data-product-id="' + json[i].id + '">Quick view</a>';
+//			html += '							</div>';
+			html += '						</figcaption>';
+			html += '					</figure>';
+			html += '				</a>';
+			html += '				<div class="card-body">';
+			html += '					<h4 class="card-title category-featured-card-title">';
+			html += '						<a href="' + json[i].url + '">' + json[i].name + '</a>';
+			html += '					</h4>';
+			html += '					<div class="card-text" data-test-info-type="price">';
+			html += '						<div class="price-section price-section--withoutTax "  >';
+			html += '							<span data-product-price-without-tax class="price price--withoutTax">$' + json[i].price + '</span>';
+			html += '						</div>';
+			html += '					</div>';
+			html += '					<form class="form" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>';
+			html += '						<input type="hidden" name="action" value="add">';
+			html += '						<input type="hidden" name="product_id" value="' + json[i].id + '"/>';
+			if(json[i].preorder == 'true'){
+				html += '						<input id="form-action-addToCart" data-wait-message="" class="cartButton cartPre" type="submit" value="Pre-Order">';
+			} else {
+				html += '						<input id="form-action-addToCart" data-wait-message="" class="cartButton cartAdd" type="submit" value="Add to Cart">';
+			}
+			html += '					</form>';
+			html += '				</div>';
+			html += '			</article>';
+			html += '			</center>';
+			html += '		</div>';
+		}
+	}	
+	html += '	</section>';
+	$("#category-featured-products").html(html);
+
+
+	window.stencilBootstrap("pages/product").load();
+}
+</script>
+
+
+
+
+
+</script>

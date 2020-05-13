@@ -1,0 +1,47 @@
+<div class="sectionTitle">Your Orders</div>
+<div class="ordersBlock">
+{{#each orders}}
+	<div class="orderRow">
+		<div class="orderHeader">
+			<div class="orderHeaderField">
+				<label>ORDER PLACED</label><br/>
+				<span class="orderHeaderInfo">{{date}}</span>
+			</div>
+			<div class="orderHeaderField">
+				<label>TOTAL</label><br/>
+				<span class="orderHeaderInfo">{{total.formatted}}</span>
+			</div>
+			<div class="orderHeaderField">
+				<label>STATUS</label><br/>
+				<span class="orderHeaderInfo"><span class="orderStatus order{{status}}">{{#if this.status "==" "Awaiting Payment"}}Payment Authorized{{else}}{{this.status}}{{/if}}</span><span class="orderHeaderInfo">
+			</div>
+			<div class="orderHeaderField">
+				<label>ORDER #{{id}}</label><br/>
+				<div class="orderHeaderActions">
+					<a href="{{details_url}}">Order Details</a>
+					<span class="orderDivider mobileHideSpan">|</span>
+					<a href="{{#replace "view_order" details_url}}print_invoice{{/replace}}" target="_blank" class="mobileHideSpan">Invoice</a>
+					{{#if this.return_url}}
+					<span class="orderDivider">|</span>
+					<a href="{{return_url}}">Return Items</a>
+				{{/if}}
+				</div>
+			</div>
+		</div>
+		{{#each items}}
+		{{#if quantity ">" 0}}
+		<div class="orderBody">
+			<div class="orderItemRow">
+				<div class="orderItemImage"><img src="{{getImage image 'thumb' (cdn ../theme_settings.default_image_product)}}"/></div>
+				<div class="orderItemInfo">
+					x{{quantity}} {{name}}<br/>
+					<span class="orderItemPrice"></span>
+				</div>
+			</div>
+			<div class="linebreak"></div>
+		</div>
+		{{/if}}
+		{{/each}}		
+
+	</div>
+{{/each}}

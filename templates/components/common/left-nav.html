@@ -1,0 +1,101 @@
+{{#if home}}
+<div id="shopByBrand" style="float: left;">
+	<center><div class="shopHeader">Shop by Brand</div></center>
+{{else}}
+<div id="navShopBrand" onclick="navShopBrandView();" style="position: absolute;";>
+	<div class="navShopIndent">Shop by Brand</div>
+	<div class="midNav2" style="font: 30px arial;">&caron;</div>
+	<div id="navShowBrands" class="navShowBrands">
+		<div id="navShowBrandsContent" class="navShowBrandsMargin">&nbsp;</div>
+{{/if}}
+	<div id="viewAllBrands" class="brandItem brandAll">
+		<div class="brT" onclick="getAllBrands('mobile');">VIEW ALL BRANDS</div>
+		<div class="brA">&rsaquo;</div>
+		<div class="brB brBall"></div>
+		<div class="brD" id="allBrands"></div>
+	</div>
+<div id="mobileViewAll"></div>
+<style>
+.brD {height: 220px; overflow: hidden;}
+.brandLinks {margin-bottom: 30px;}
+.brandImgBG {display: none;}
+.brT:hover {color: #fff;}
+</style>
+<div id="brandList">
+	{{#each theme_settings.brands_flyout}}
+	<div id="brand_{{l}}" class="brandItem">
+		<a href="/{{l}}/"><div class="brT">{{b}}</div></a>
+	</div>
+	{{/each}}
+</div>
+{{#unless home}}
+</div>
+{{/unless}}
+<script>
+window.viewAll = 0;
+
+function getAllBrands(action,letter){
+	var brands = new Array();
+	var links  = new Array();
+	
+	{{#each categories}}
+	brands.push("{{name}}"); links.push("{{url}}");
+	{{/each}}
+
+	//POPULATE ALL BRANDS REGULAR
+	if(action == 'allBrands'){
+		var html = '';
+		for(i = 0; i < brands.length; i++){
+			html += '<a href="' + links[i] + '" rel="nofollow">' + brands[i] + '</a>';
+		}
+		$("#allBrands").html(html);
+	}
+	
+	//POPULATE ALL BRANDS MOBILE
+	if(action == 'mobile' && window.screen.width < 9900){
+		var theLetters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','#'];
+		var allBrands = new Array();
+		var allLinks = new Array();
+		for(i = 0; i < brands.length; i++){
+			var thisLetter = brands[i].substring(0,1);
+			var numbers = '0123456789#';
+			if(numbers.indexOf(thisLetter) > 0){thisLetter = "#";}
+			if(!allBrands[thisLetter]){
+				allBrands[thisLetter] = [];
+				allLinks[thisLetter] = [];
+			}
+			allBrands[thisLetter].push(brands[i]);
+			allLinks[thisLetter].push(links[i]);
+		}
+
+		if(window.viewAll == '1' && !letter & letter != 0){
+			$("#mobileViewAll").css('display','none'); window.viewAll = '0'; exit();
+		}
+
+		window.viewAll = '1';
+		html = '';
+		for(i = 0; i < theLetters.length; i++){
+			html += '<div class="mobileViewLetter' + (i == letter ? ' mobileViewLetterSelected' : '') + '" onclick="getAllBrands(\'mobile\',' + i + ');">' + theLetters[i] + '</div>';
+		}
+		html += '<div class="mobileViewLetter' + (letter == theLetters.length ? ' mobileViewLetterSelected' : '') + '" onclick="getAllBrands(\'mobile\',' + theLetters.length + ');" style="font-size: 14px; line-height: 2em; margin-bottom: 16px;">All</div>';
+		if(letter || letter == '0'){
+			for(i = (letter == theLetters.length ? 0 : letter); i < (letter == theLetters.length ? theLetters.length : (letter + 1)); i++){
+				if(allBrands[theLetters[i]]){
+					for(k = 0; k < allBrands[theLetters[i]].length; k++){
+						html += '<li><a href="' + allLinks[theLetters[i]][k] + '" rel="nofollow">' + allBrands[theLetters[i]][k] + '</a></li>';
+					}
+				}
+			}
+			$("#mobileViewAll").css('height','auto');
+		} else {
+			$("#mobileViewAll").css('height','136px');
+		}
+
+		html += '';
+		$("#mobileViewAll").css('display','block');
+		$("#mobileViewAll").html(html);
+	}
+}
+
+getAllBrands('allBrands','');
+</script>

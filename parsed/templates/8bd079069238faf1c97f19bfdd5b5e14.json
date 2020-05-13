@@ -1,0 +1,1 @@
+{"components/common/json":"{{#block \"page\"}} {{/block}}\n","layout/featured":"jsonCallback({{> components/common/json }})\n"}

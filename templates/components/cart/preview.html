@@ -1,0 +1,64 @@
+<div class="preview-header">{{lang 'cart.added_to_cart.what_next' num_products=cart.added_item.quantity}}</div>
+<div class="preview-product">
+	{{#with cart.added_item}}
+	<div class="preview-img">
+		<center><img src="{{getImage image 'product' (cdn ../theme_settings.default_image_product)}}" alt="{{image.alt}}"/></center>
+	</div>
+	<div class="preview-text">
+		<div class="preview-title productTitle">{{name}}</div>
+		<div class="preview-price buyboxPrice">{{quantity}} &times; {{price.formatted}}</div>
+	</div>
+	{{/with}}
+</div>
+<div class="preview-options">
+	<center>
+	{{#if cart.quantity "==" "-1"}}
+	<b><span style="color: #ff0000;">WE ARE CURRENTLY EXPERIENCING TECHNICAL DIFFICULTIES WITH OUR SHOPPING CART</span></b>
+	<br><br>
+	We apologize for the inconvenience. Please call us toll free at <a href="tel:8774512597" style="color: #0064a3; text-decoration: underline;">1-877-451-2597</a> to place your order over the phone, or try again later. Thank you!
+	<br>
+	<a href="#" class="" role="button" data-reveal-close><div class="preview-button preview-button-white">Close Window</div></a>
+	
+	{{else}}
+
+	<span>{{lang 'cart.added_to_cart.your_cart_contains' num_products=cart.quantity}}</span><br/>
+	<span>Order subtotal <span class="preview-subtotal">{{cart.sub_total.formatted}}</span></span>
+
+	<a href="{{urls.checkout.single_address}}"><div class="preview-button">Proceed to Checkout</div></a>
+	<div style="width: 100%; height: 34px;"></div>
+		<style>
+		.cartCC img {width: 150px; margin-bottom: 10px;}
+		</style>
+		<div class="cartCC">
+			<a href="{{urls.checkout.single_address}}"><img src="{{cdn '/assets/img/credit-cards.png'}}"/></a>
+		</div>
+	{{#each cart.additional_checkout_buttons}}
+		{{{this}}}
+	{{/each}}
+	<center><div id="AmazonPayButton" style="width: 150px; margin-top: 10px;"/></center>
+	<script type="text/javascript">
+	  var authRequest;
+	  OffAmazonPayments.Button("AmazonPayButton", "A1K4HEDARAOQZI", {
+		type:  "PwA",
+		color: "Gold",
+		size:  "small",
+			authorization: function() {
+		  loginOptions =
+			{scope: "profile postal_code payments:widget payments:shipping_address", popup: true};
+		  authRequest = amazon.Login.authorize (loginOptions,
+	 "https://toywiz.com/checkout.php");
+		},
+		onError: function(error) {
+			alert(error);
+		} // your error handling code
+	  });
+	</script>
+	<div class="preview-or">or</div>
+	<a href="#" class="" role="button" data-reveal-close><div class="preview-button preview-button-white">Continue Shopping</div></a>
+	<a href="{{urls.cart}}"><div class="preview-button preview-button-white">View or Edit Cart</div></a>
+	{{/if}}
+	</center>
+
+	<p data-cart-quantity="{{cart.quantity}}" style="display: none;">{{lang 'cart.added_to_cart.your_cart_contains' num_products=cart.quantity}}</p>
+
+</div>

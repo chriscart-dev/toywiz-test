@@ -1,0 +1,352 @@
+---
+products:
+    new:
+        limit: {{theme_settings.homepage_new_products_count}}
+    featured:
+        limit: {{theme_settings.homepage_featured_products_count}}
+    top_sellers:
+        limit: {{theme_settings.homepage_top_products_count}}
+carousel: {{theme_settings.homepage_show_carousel}}
+blog:
+    recent_posts:
+        limit: {{theme_settings.homepage_blog_posts_count}}
+---
+
+
+{{#partial "page"}}
+
+
+<style>
+/***************** MOBILE HOMEPAGE *****************/
+.homepageSeperator {clear: both;}
+@media (max-width: 1040px){
+	.header {position: absolute;}
+	#header--spacer {}
+
+	#shopByBrand {display: none;}
+	#homeSlider {width: 100%; height: 400px;}
+	.container {max-width: 100%;}
+	.homeFadeR {display: none;}
+	.homeSlide {width: 100%; height: 400px; background-size: cover;}
+	#homeBlue {height: 400px;}
+	#homeBox {width: 100%; margin: 0px; position: relative; top: 0px;}
+	.homepageSeperator {clear: both; margin-top: 620px;}
+
+	#homeLogos {padding: 0px; background: #fff; margin: 0px; padding-top: 10px; height: 65px;}
+	.homeLogoCon {min-width: 16%; width: 16%; margin-left: 3%;}
+	.homeLogo {width: 100%; background-size: contain;}
+
+	#homeHighlights {max-height: 490px; background: #fff; padding: 0px; padding-top: 10px; width: 100%; position: relative;}
+	.highlightWrapper {width: 29%; margin-left: 2%; margin-right: 2%; margin-bottom: 10px;}
+	.highlightBox {width: 100%;}
+	.highlightText {width: 100%;}
+	.highlightImg {width: 100%;}
+
+	.homeHeaderBox {width: 96%; margin-left: 2%;}
+	.homeHeaderButton {float: right; margin-top: 6px; height: 26px; width: 142px; padding: 4px; background: none; font: 700 11px Lato; text-align: center; cursor: pointer;}
+	.homeHeaderButton {margin-top: 14px; text-align: right;}
+
+	.homeProducts {width: 100%; text-align: left; margin: 0px; position: relative; margin-top: 20px;}
+	.homeProductWrapper {width: 33%;}
+
+	.itemPageAdsHome {display: none;}
+
+	.footer {width: 95%;}
+}
+@media (max-width: 600px){
+	.homepageSeperator {clear: both; margin-top: 520px;}
+	#homeSlider {width: 100%; height: 300px;}
+	.highlightWrapper {width: 46%; margin-left: 2%; margin-right: 2%; margin-bottom: 10px;}
+	.homeSlide {width: 100%; height: 300px;}
+	#homeBlue {height: 300px;}
+	.homeProductWrapper {width: 49%;}
+	.homeLogoCon {width: 20%; margin-left: 3%;}
+}
+@media (max-width: 1040px) and (min-width: 801px){
+	#homeSlider {width: 80%; margin-left: 10%; height: 400px;}
+}
+</style>
+
+
+<div id="content">
+	<div>
+		{{> components/common/left-nav home="Y"}}
+	</div>
+	<script id='code_1'>$(function() {$("#homeSlider").swipe( {swipeRight:function(event, direction, distance, duration, fingerCount, fingerData) {homeRotator(window.rotateCurrent + 1);},swipeLeft:function(event, direction, distance, duration, fingerCount, fingerData) {if(window.rotateCurrent > 0){homeRotator(window.rotateCurrent - 1);} else {homeRotator('2');}},threshold:20});});</script>
+
+	<div id="homeSlider">
+		<div class="homeFadeR"></div>
+		<div id="homeSlide0" class="homeSlide">
+			<div id="spotDots">
+				<div class="spotDot" id="dot0" onclick="homeRotator('0');">&#9679;</div>
+				<div class="spotDot" id="dot1" onclick="homeRotator('1');">&#9702;</div>
+				<div class="spotDot" id="dot2" onclick="homeRotator('2');">&#9702;</div>
+			</div>
+		</div>
+		<div id="homeSlide1" class="homeSlide">
+			<div id="spotDots">
+				<div class="spotDot" id="dot0" onclick="homeRotator('0');">&#9702;</div>
+				<div class="spotDot" id="dot1" onclick="homeRotator('1');">&#9679;</div>
+				<div class="spotDot" id="dot2" onclick="homeRotator('2');">&#9702;</div>
+			</div>
+		</div>
+		<div id="homeSlide2" class="homeSlide">
+			<div id="spotDots">
+				<div class="spotDot" id="dot0" onclick="homeRotator('0');">&#9702;</div>
+				<div class="spotDot" id="dot1" onclick="homeRotator('1');">&#9702;</div>
+				<div class="spotDot" id="dot2" onclick="homeRotator('2');">&#9679;</div>
+			</div>
+		</div>
+		<div class="homeSliderLink" onclick="homeRotatorLink();"></div>
+	</div>
+
+	<div class="homeSpotContainer">
+		<div id="homeSpot1" class="homeSpotInner"></div>
+	</div>
+	<div class="homeSpotContainer homeSpotContainer2">
+		<div id="homeSpot2" class="homeSpotInner"></div>
+	</div>
+
+	<div id="homeBox">
+		<div id="homeLogos">
+			<div class="homeLogoCon">
+				<a href="/{{theme_settings.homepage_logo_1}}/">
+					<div class="homeLogo" style="background-image:url('http://toy-wiz.mybigcommerce.com/content/images/sections/{{theme_settings.homepage_logo_1}}.jpg');"></div>
+				</a>
+			</div>
+			<div class="homeLogoCon">
+				<a href="/{{theme_settings.homepage_logo_2}}/">
+					<div class="homeLogo" style="background-image:url('http://toy-wiz.mybigcommerce.com/content/images/sections/{{theme_settings.homepage_logo_2}}.jpg');"></div>
+				</a>
+			</div>
+			<div class="homeLogoCon">
+				<a href="/{{theme_settings.homepage_logo_3}}/">
+					<div class="homeLogo" style="background-image:url('http://toy-wiz.mybigcommerce.com/content/images/sections/{{theme_settings.homepage_logo_3}}.jpg');"></div>
+				</a>
+			</div>
+			<div class="homeLogoCon">
+				<a href="/{{theme_settings.homepage_logo_4}}/">
+					<div class="homeLogo" style="background-image:url('http://toy-wiz.mybigcommerce.com/content/images/sections/{{theme_settings.homepage_logo_4}}.jpg');"></div>
+				</a>
+			</div>
+			<div class="homeLogoCon">
+				<a href="/{{theme_settings.homepage_logo_5}}/">
+					<div class="homeLogo" style="background-image:url('http://toy-wiz.mybigcommerce.com/content/images/sections/{{theme_settings.homepage_logo_5}}.jpg');"></div>
+				</a>
+			</div>
+		</div>
+		<div id="homeHighlights">
+		{{#each theme_settings.homepage_highlights}}
+			<a href="{{url}}"><div class="highlightWrapper">
+			<div class="highlightBox"><div class="highlightImgWrapper"><img class="highlightImg" src="/content/images/highlights/{{img}}" alt=""/></div>
+			<div class="highlightText">{{txt}}</div>
+			</div>
+			</div></a>
+		{{/each}}
+
+		</div>
+	</div>
+</div>
+</div>
+<div style="clear: both;"></div>
+
+<div class="innerxxx">
+	<div class="homeHeaderBox mtop30" style="margin-top: 30px;">
+		<div class="homeHeaderBoxInt">
+			Pre-Orders
+			<a href="http://database.toywiz.com/index.php?f=special&v=Pre-Orders">
+				<div class="homeHeaderButton">
+					>&nbsp;&nbsp;SEE ALL PRE-ORDERS
+				</div>
+			</a>
+		</div>
+	</div>
+	<div id="homePreOrders" class="homeProducts"></div>
+	<div class="homeHeaderBox homeBoxHot">
+		<div class="homeHeaderBoxInt">
+			Best Sellers
+			<a href="http://database.toywiz.com/index.php?f=special&v=Best Sellers">
+				<div class="homeHeaderButton homeBtnHot">
+					>&nbsp;&nbsp;SEE ALL BEST SELLERS
+				</div>
+			</a>
+		</div>
+	</div>
+	<div id="homeBestSellers" class="homeProducts"></div>
+</div>
+
+<div style="clear: both; height: 10px;"></div>
+
+<div class="innerxxx">
+	<div class="dividerLine">
+		<div class="itemPageAds itemPageAdsHome">
+			<div style="width: 728px; float: left; margin-top: 10px;">
+				<iframe src="http://database.toywiz.com/ads/ad_468_728.html" frameborder="0" width="728" scrolling="no" height="90"></iframe>
+				<div style="margin-top: 6px;">
+					<iframe src="http://database.toywiz.com/ads/ad_728x150.html" frameborder="0" width="728" scrolling="no" height="150"></iframe>
+				</div>
+			</div>
+			<div style="width: 300px; float: left; margin-top: 10px; margin-left: 10px;">
+				<iframe src="http://database.toywiz.com/ads/ad_300x250.html" frameborder="0" width="300" scrolling="no" height="250"></iframe>
+			</div>
+			<div style="width: 300px; clear: left; float: left; margin-top: -50px; margin-left: 0px; margin-right: 10px;">
+				<script type="text/javascript" src="http://ap.lijit.com/www/delivery/fpi.js?z=316152&u=toywiz&width=300&height=250"></script>
+			</div>
+			<div style="width: 728px; float: left; margin-top: 10px;">
+				<script type="text/javascript" src="http://ap.lijit.com/www/delivery/fpi.js?z=316116&u=toywiz&width=728&height=90"></script>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="clear: both;">&nbsp;</div>
+
+<script>
+function shuffle(array) {var currentIndex = array.length, temporaryValue, randomIndex; while (0 !== currentIndex) {randomIndex = Math.floor(Math.random() * currentIndex); currentIndex -= 1; temporaryValue = array[currentIndex]; array[currentIndex] = array[randomIndex]; array[randomIndex] = temporaryValue;} return array;}
+
+/*** BRING ALL FEATURED PRODUCTS INTO AN ARRAY ***/
+featured = new Array();
+{{#each products.featured}}
+featured['{{id}}'] = ['{{#if pre_order "==" true}}1{{else}}0{{/if}}','{{id}}','{{url}}','{{name}}','{{price.without_tax.formatted}}','{{getImage image 'gallery' (cdn theme_settings.default_image_product)}}'];
+{{/each}}
+
+/*** SPLIT FEATURED ITEMS INTO PRE-ORDER AND HOT ARRAYS ***/
+var pPre = new Array();
+var pHot = new Array();
+var featuredPre = new Array();
+var featuredHot = new Array();
+for(var key in featured){
+
+	if(featured[key][0] == '1'){
+		pPre.push(featured[key][2]);
+		pPre.push(featured[key][3]);
+		pPre.push(featured[key][4]);
+		pPre.push(featured[key][5]);
+		pPre.push('');
+
+		featuredPre.push(featured[key]);
+
+	} else {
+		pHot.push(featured[key][2]);
+		pHot.push(featured[key][3]);
+		pHot.push(featured[key][4]);
+		pHot.push(featured[key][5]);
+		pHot.push('');
+
+		featuredHot.push(featured[key]);
+	}
+}
+shuffle(featuredHot);
+
+homeProducts('homePreOrders',featuredPre,'20');
+homeProducts('homeBestSellers',featuredHot,'20');
+
+function homeProducts(div,data,ct){
+	shuffle(data);
+	var html = '';
+	for(i = 0; i < ct; i++){
+		html += '<div class="homeProductWrapper" style="height: 340px; border-bottom: 1px solid #ccc;"><center><div class="homeProduct">' + productCard(data[i]) + '</div></center></div>';
+	}
+	html += '<div style="clear: both; width: 100%; border-top: 4px solid #ffffff; position: relative; top: -31px;"></div>';
+	$("#" + div).html(html);
+}
+
+/*** POPULATE CAROUSEL ARRAYS ***/
+spot = new Array();
+spotLink = new Array();
+var spot1 = new Array();
+var spot2 = new Array();
+var sliders = new Array();
+{{#each carousel.slides}}
+$("#homeSlide{{@index}}").css("background-image","url('{{image}}')");
+sliders.push('{{alt}}');
+spot1.push(featured['{{heading}}']);
+spot2.push(featured['{{text}}']);
+spotLink.push('{{url}}');
+{{/each}}	
+
+$("#homeSlide0").animate({'opacity': '1'}, 1000);
+$("#spotTitle1").html(spot[1]);
+var theHTML1 = '';
+var theHTML2 = '';
+for(k = 0; k < 4; k++){
+	if(k == 3){
+		i = 0;
+	} else {
+		i = k;
+	}
+	theHTML1 += '<div class="homeSpot">' + productCard(spot1[i],'Y') + '</div>';
+	theHTML2 += '<div class="homeSpot">' + productCard(spot2[i],'Y') + '</div>';
+}
+$("#homeSpot1").html(theHTML1);
+$("#homeSpot2").html(theHTML2);
+
+window.rotateCurrent = 0;
+
+function homeRotator(rotateNew){
+	if(rotateNew == 9){rotateNew = parseFloat(window.rotateCurrent) + 1;}
+	if(rotateNew >= sliders.length){rotateNew = 0;}
+	if(rotateNew == 0){
+		var marginTop = (rotateNew + sliders.length)*-358 + 'px';
+	} else {
+		var marginTop = (rotateNew)*-358 + 'px';
+	}
+	$("#homeSlide" + rotateNew).animate({'opacity': '1'}, 1000);
+	$("#homeSlide" + window.rotateCurrent).animate({'opacity': '0'}, 1000);
+	$("#homeSpot1").animate({'marginTop' : marginTop}, 1000, function(){if(rotateNew == 0){$("#homeSpot1").css('marginTop','0px');}});
+	$("#homeSpot2").animate({'marginTop' : marginTop}, 1000, function(){if(rotateNew == 0){$("#homeSpot2").css('marginTop','0px');}});
+
+	window.rotateCurrent = rotateNew;
+}
+function homeRotatorLink(){window.open(spotLink[window.rotateCurrent], '_self');}
+
+setInterval(function(){homeRotator('9')},6000);
+
+
+function productCard(info,fixed){
+	if(!fixed){fixed == 'N';}
+	html	 = '<li class="product grid0" style="list-style-type: none;">';
+	html	+= '<center>';
+	html	+= '	<article class="card ">';
+	html	+= '		<a href="' + info[2] + '">';
+	html	+= '			<figure class="card-figure">';
+	html	+= '				<div class="card-image-nohover" style="background-image:url(\'' + info[5] + '\'); max-height: 170px;"></div>';
+	html	+= '				<figcaption class="card-figcaption">';
+	html	+= '					<div class="card-figcaption-body">';
+	html	+= '						<a href="#" class="button button--small card-figcaption-button quickview" data-product-id="' + info[1] + '">Quick view</a>';
+	html	+= '						<a href="/cart.php?action=add&amp;product_id=' + info[1] + '" class="button button--small card-figcaption-button">Add to Cart</a>';
+	html	+= '					</div>';
+	html	+= '				</figcaption>';
+	html	+= '			</figure>';
+	html	+= '		</a>';
+	html	+= '		<div class="card-body">';
+	html	+= '			<h4 class="card-title ' + (fixed == 'Y' ? 'card-fixed' : '') + '">';
+	html	+= '				<a href="' + info[2] + '">' + info[3] + '</a>';
+	html	+= '			</h4>';
+	html	+= '			<div class="card-text" data-test-info-type="price">';
+	html	+= '				<div class="price-section price-section--withoutTax "  >';
+	html	+= '					<span data-product-price-without-tax class="price price--withoutTax">' + info[4] + '</span>';
+	html	+= '				</div>';
+	html	+= '			</div>';
+
+	if(info[0] == 1){
+		html	+= '			<a href="/cart.php?action=add&product_id=' + info[1] + '"><div class="cartButton cartPre"><img src="/content/images/elements/cartLPre.png"/><span class="cartText">Pre-Order</span></div></a>';
+	} else {
+		html	+= '			<a href="/cart.php?action=add&product_id=' + info[1] + '"><div class="cartButton cartAdd"><span class="cartText">Add to Cart</span></div></a>';
+	}	
+	
+	html	+= '		</div>';
+	html	+= '	</article>';
+	html	+= '</center>';
+	html	+= '</li>';
+	return html;
+}
+
+
+</script>
+{{/partial}}
+
+
+
+
+{{> layout/base home="Y"}}

@@ -1,0 +1,22 @@
+<center><a href="{{#each (limit breadcrumbs 2)}}{{#if @last}}{{url}}{{/if}}{{/each}}"><img src="" id="categoryLogo"/></a></center>
+<script>
+for(i = 0; i < categories.length; i++){
+	if(categories[i].name == '{{#each (limit breadcrumbs 2)}}{{#if @last}}{{name}}{{/if}}{{/each}}'){
+		$("#categoryLogo").attr('src',categories[i].image.replace('{:size}','600x600'));
+	}
+}
+</script>
+<div class="leftSearch" onclick="showFilters('all');"><span class="mobileOnly hideFilters">HIDE FILTERS</span><span class="mobileOnly showFilters">SHOW FILTERS</span><span class="mobileHide">FILTER BY:</span></div>
+{{> components/faceted-search/index category}}
+
+
+
+<div class="categoryId">Category #{{category.id}}</div>
+
+<center><div style="width: 160px; height: 600px; margin-top: 46px; margin-bottom: 14px;" class="mobileHide">
+
+<!-- Conversant Media 120x600 and 160x600 SkyScraper CODE for ToyWiz.com -->
+<script type="text/javascript">var vclk_options = {sid:18460,media_id:3,media_type:7,version:"1.4",secure:"on"};</script><script class="vclk_pub_code" type="text/javascript" src="https://secure.cdn.fastclick.net/js/adcodes/pubcode.min.js?sid=18460&media_id=3&media_type=7&version=1.4&exc=1"></script><noscript><a href="https://secure.fastclick.net/w/click.here?sid=18460&m=3&c=1" target="_blank"><img src="https://secure.fastclick.net/w/get.media?sid=18460&m=3&tp=7&d=s&c=1&vcm_acv=1.4" width="160" height="600" border="1"></a></noscript>
+<!-- Conversant Media 120x600 and 160x600 SkyScraper CODE for ToyWiz.com -->
+
+</div></center>

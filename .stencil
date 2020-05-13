@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://toywiz-test.mybigcommerce.com",
+  "accessToken": "so4xvym2abro14q3t4bfoc5vihn22i0",
+  "port": 3000,
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}

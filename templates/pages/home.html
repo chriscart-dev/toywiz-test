@@ -1,0 +1,263 @@
+---
+cart: true
+products:
+    new:
+        limit: 0
+    featured:
+        limit: 200
+    top_sellers:
+        limit: 0
+carousel: {{theme_settings.homepage_show_carousel}}
+blog:
+    recent_posts: null
+shop_by_brand:
+---
+{{#partial "page"}}
+<script>var pageType = 'home';</script>
+<style>
+@media all and (max-width: 800px){
+	.homeTrending {width:100%; margin-left: 0px; }
+	.homeBannerProduct {display: none;}
+	.spotDots {display: none;}
+}
+
+#homeBannerShop {z-index: 800; font: 12px Lato; opacity: .9; position: absolute; right: 4px; bottom: 10px; padding: 4px 8px; border-radius: 5px; background: #fff; border: 1px solid #ffce4a; box-shadow: 0px 0px 4px #ffce4a;}
+</style>
+<div class="homeTop">
+    <div class="homeBanner" onclick="homeRotatorLink();">
+		<div id="homeBannerSpots" class="bannerImage">
+			<img alt="Image carousel" title="Image carousel" id="homeBannerImg" src="{{cdn '/assets/img/bannerPlaceholder.jpg'}}"/>
+			<div class="spotDots">
+				<div id="spotDot0" class="spotDot" onclick="homeRotator('0',event);"></div>
+				<div id="spotDot1" class="spotDot" onclick="homeRotator('1',event);"></div>
+				<div id="spotDot2" class="spotDot" onclick="homeRotator('2',event);"></div>
+			</div>
+			<div id="homeBannerShop" class="mobileOnly">Shop Now!</div>
+		</div>
+		<div id="homeBanner0" class="bannerImage"><img title="Baner Image1"  alt="Banner" src="{{cdn '/assets/img/bannerPlaceholder.jpg'}}"/></div>
+		<div id="homeBanner1" class="bannerImage"><img alt="Banner 1" title="Baner Image2" src="{{cdn '/assets/img/bannerPlaceholder.jpg'}}"/></div>
+		<div id="homeBanner2" class="bannerImage"><img alt="Banner 2" title="Baner Image3" src="{{cdn '/assets/img/bannerPlaceholder.jpg'}}"/></div>
+	</div>
+	<div class="homeBannerProduct">
+		<div id="homeBannerColumn1" class="homeBannerColumn">
+			<div class="productBlock">
+			</div>
+		</div>
+		<div id="homeBannerColumn2" class="homeBannerColumn">
+			<div class="productBlock" style="margin-left: 10px;">
+			</div>
+		</div>
+		<div id="homeBannerColumn3" class="homeBannerColumn">
+			<div class="productBlock" style="margin-left: 10px;">
+			</div>
+		</div>
+	</div>
+</div>
+<div style="width: 100%; clear: right;"></div>
+<div class="homeTrending">
+	<div class="productsHeader"><span>TRENDING @ TOYWIZ</span></div>
+	<div class="homeTrendingSections">
+		<div class="productsRow-previous-arrow" onclick="productsScroll('homeTrending','-1');" id="previous-arrow-homeTrending"></div>
+		<div id="homeTrendingFrame" class="homeTrendingFrame">
+			<div id="homeTrendingInner" class="homeTrendingInner">
+			</div>
+		</div>
+		<div class="productsRow-next-arrow" onclick="productsScroll('homeTrending','1');" id="next-arrow-homeTrending"></div>
+	</div>
+</div>
+<div style="width: 100%; clear: both;"></div>
+<div id="homeFeatured-new" class="homeFeatured">
+	<div class="productsHeader"><span><plain>FEATURED </plain><bold>NEW ARRIVALS</bold></span></div>
+	<div class="productsRow-previous-arrow featured-new-arrow" onclick="productsScroll('featured-new','-1',window.productCounts['new']);" id="previous-arrow-featured-new"></div>
+	<div id="featured-new" class="productsRow featured-products-full">
+		<div id="featured-newFrame" class="featuredFrame">
+			<div id="featured-newInner" class="productsRow-inner">
+			</div>
+		</div>
+	</div>
+	<div class="productsRow-next-arrow feature-new-arrow" onclick="productsScroll('featured-new','1',window.productCounts['new']);" id="next-arrow-featured-new"></div>
+</div>
+<div id="homeFeatured-hot" class="homeFeatured">
+	<div class="productsHeader"><span><plain>FEATURED </plain><bold>HOT SELLERS</bold></span></div>
+	<div class="productsRow-previous-arrow featured-hot-arrow" onclick="productsScroll('featured-hot','-1',window.productCounts['hot']);" id="previous-arrow-featured-hot"></div>
+	<div id="featured-hot" class="productsRow featured-products-full">
+		<div id="featured-hotFrame" class="featuredFrame">
+			<div id="featured-hotInner" class="productsRow-inner">
+			</div>
+		</div>
+	</div>
+	<div class="productsRow-next-arrow featured-hot-arrow" onclick="productsScroll('featured-hot','1',window.productCounts['hot']);" id="next-arrow-featured-hot"></div>
+</div>
+<div id="homeFeatured-pre" class="homeFeatured">
+	<div class="productsHeader"><span><plain>FEATURED </plain><bold>PRE-ORDERS</bold></span></div>
+	<div class="productsRow-previous-arrow featured-pre-arrow" onclick="productsScroll('featured-pre','-1',window.productCounts['pre']);" id="previous-arrow-featured-pre"></div>
+	<div id="featured-pre" class="productsRow featured-products-full">
+		<div id="featured-preFrame" class="featuredFrame">
+			<div id="featured-preInner" class="productsRow-inner">
+			</div>
+		</div>
+	</div>
+	<div class="productsRow-next-arrow feature-pre-arrow" onclick="productsScroll('featured-pre','1',window.productCounts['pre']);" id="next-arrow-featured-pre"></div>
+</div>
+<script>
+function homeRotatorLink(){
+	if(window.rotateCurrent == 1){
+		var theUrl = window.homeRotatorUrl1;
+	} else if(window.rotateCurrent == 2){
+		var theUrl = window.homeRotatorUrl2;
+	} else {
+		var theUrl = window.homeRotatorUrl0;
+	}
+	window.open(theUrl,'_self');
+}
+
+/************************** DEFINE FEATURED OBJECTS AND ARRAY AND ASSIGN TO SUB-ARRAYS **************************/
+function loadFeatured(json){
+	var rotatorProducts = [];
+	k = 0;
+	for(i = 0; i < json.length; i++){
+		if(json[i].type == 'rotator'){
+			group = parseInt(k/3);
+			entry = k%3;
+			rotator = {
+				'id':json[i].id,
+				'sku':json[i].sku,
+				'name':json[i].name,
+				'url':json[i].url,
+				'brand':json[i].brand,
+				'image':json[i].image.replace('{:size}','600x600'),
+				'preorder':json[i].preorder,
+				'price':json[i].price
+			};
+			
+
+			if(entry == 0 && group == 0){$("#homeBannerColumn1").html(productBlock(rotator));}
+			else if(entry == 1 && group == 0){$("#homeBannerColumn2").html(productBlock(rotator));}
+			else if(entry == 2 && group == 0){$("#homeBannerColumn3").html(productBlock(rotator));}
+			else if(entry == 0){$("#homeBannerColumn1").html($("#homeBannerColumn1").html() + productBlock(rotator));}
+			else if(entry == 1){$("#homeBannerColumn2").html($("#homeBannerColumn2").html() + productBlock(rotator));}
+			else if(entry == 2){$("#homeBannerColumn3").html($("#homeBannerColumn3").html() + productBlock(rotator));}
+			k++;
+		}
+	}
+
+	var products = [
+{{#each products.featured}}
+{"id":{{id}},"name":"{{name}}","sku":"{{sku}}","price":"{{price.without_tax.value}}","pre_order":"{{pre_order}}","url":"{{url}}","image":"{{image.data}}","show_cart_action":"{{show_cart_action}}","brand":"{{brand.name}}","kw":"{{#each custom_fields}}{{#if name "==" "Keyword"}}{{value}}{{/if}}{{/each}}","status":"{{#each custom_fields}}{{#if name "==" "Status"}}{{value}}{{/if}}{{/each}}"}{{#unless @last}},{{/unless}}
+{{/each}}
+]
+
+	getFeatured(products);
+}
+
+function getFeatured(products){
+
+	featured = {};
+	var featuredHot = [];
+	var featuredPre = [];
+	var featuredNew = [];
+
+	for(i = 0; i < products.length; i++){
+		if(products[i].show_cart_action == "true"){
+			var thisType = 'hot';
+			if(products[i].status == 'Pre-Order'){
+				thisType = 'pre';
+				featuredPre.push(products[i].id);
+			}
+			if(products[i].status == 'New Arrival'){
+				thisType = 'new';
+				featuredNew.push(products[i].id);
+			}
+			if(thisType == 'hot'){
+				featuredHot.push(products[i].id);
+			}
+			featured[products[i].id] = {
+				'id':products[i].id,
+				'sku':products[i].sku,
+				'name':products[i].name,
+				'url':products[i].url,
+				'brand':products[i].brand,
+				'image':products[i].image.replace('{:size}','600x600'),
+				'preorder':products[i].preorder,
+				'price':products[i].price,
+				'kw':products[i].kw
+			};
+		}
+	}
+
+	featuredHot = shuffle(featuredHot);
+	featuredPre = shuffle(featuredPre);
+	featuredNew = shuffle(featuredNew);
+
+	/************************** HOMEPAGE POPULATE FEATURED PRODUCTS **************************/
+	window.productCounts = {};
+	setFeatured('pre',featuredPre,'2');
+	setFeatured('new',featuredNew,'2');
+	setFeatured('hot',featuredHot,'1');
+
+}
+
+/************************** HOMEPAGE ROTATING BANNER **************************/
+function homeRotator(counter,e){
+	if(e){
+		e.stopPropagation();
+		clearInterval(homeBannerInterval);
+		window.rotateCurrent = counter - 1;
+		if(window.rotateCurrent < 0){window.rotateCurrent = 2;}
+		if(counter > 0){
+			$("#homeBanner1").css('opacity','1');
+		}
+		if(counter > 1){
+			$("#homeBanner0").css('opacity','0');
+			$("#homeBanner1").css('opacity','0');
+			$("#homeBanner2").css('opacity','1');
+		}		
+	}
+	if(window.rotateCurrent == 2){
+		$("#homeBanner0").animate(
+			{'opacity': '1'},{duration: 1000, complete: function(){$(".bannerImage").css('opacity','1');}});
+	} else {
+		$("#homeBanner" + window.rotateCurrent).animate({'opacity': '0'}, 1000);
+	}
+	$(".spotDot").css('background','none');
+	window.rotateCurrent++;
+	if(window.rotateCurrent == 3){window.rotateCurrent = 0;}
+	$("#spotDot" + window.rotateCurrent).css('background','#ffce4a');
+
+	if(e){
+		homeBannerInterval = setInterval(function(){homeRotator(window.rotateCurrent)},10000);
+	}
+
+	$(".homeBannerColumn").css('margin-top',window.rotateCurrent*-400 + 'px');
+
+}
+
+function scriptsHome(){
+	/************************** SET ROTATOR **************************/
+	var homeRotatorUrl = [];
+	var spotProducts = '';
+	{{#each carousel.slides}}
+	spotProducts = '{{heading}},{{text}}';
+	spotProducts.replace(',,',',');
+	spotArray = spotProducts.split(',');
+	$("#homeBanner{{@index}}").css("background-image","url('{{image}}')");
+	$("#homeBanner{{@index}} img").attr("src","{{image}}");
+	theUrl = '{{url}}'
+	theUrl = theUrl.replace('&amp;','&');
+	theUrl = theUrl.replace('&amp;','&');
+	theUrl = theUrl.replace('&amp;','&');
+	theUrl = theUrl.replace('&amp;','&');
+	homeRotatorUrl.push(theUrl);
+	{{/each}}
+
+	window.rotateCurrent = 0;
+	window.homeRotatorUrl0 = homeRotatorUrl[0];
+	window.homeRotatorUrl1 = homeRotatorUrl[1];
+	window.homeRotatorUrl2 = homeRotatorUrl[2];
+
+	/************************** HOMEPAGE FEATURED AND TRENDING ITEMS **************************/
+	$("#homeTrendingInner").html($("#homeTrendingInner").html() + $("#homeTrendingInner").html() + $("#homeTrendingInner").html());
+}
+</script>
+{{/partial}}
+{{> layout/base home="Y"}}

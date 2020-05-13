@@ -1,0 +1,52 @@
+<div class="productBlock itemBlock">
+	<a href="{{url}}">
+		<div class="productImg">
+			<img src="{{getImage image 'section' (cdn theme_settings.default_image_product)}}">
+		</div>
+		{{#if pre_order "==" "xxxtrue"}}
+		<div class="productOverlay"><img src="{{cdn '/assets/img/preorder-solid'}}.png"></div>
+		{{else}}
+			{{#each custom_fields}}{{#if value "==" "Hotttt"}}<div class="productOverlay"><img src="{{cdn '/assets/img/hotLeft'}}.png"></div>{{/if}}{{/each}}
+		{{/if}}
+		<div class="productText">
+			{{#each custom_fields}}{{#if name "==" "Arrival Date"}}<div class="dateArrived">{{value}}</div>{{/if}}{{/each}}
+			<div class="productTextInner">{{name}}</div>
+		</div>
+		<div class="productPrice">
+			{{#if add_to_cart_url}}
+				{{> components/products/price price=price}}
+			{{else if pre_order "==" true}}
+				{{> components/products/price price=price}}
+			{{else}}
+				&nbsp;
+			{{/if}}
+		</div>
+	</a>
+
+<style>
+</style>
+
+	<div class="productCart{{#if add_to_cart_url}}{{else if pre_order "==" true}}{{else}} productCartOOS{{/if}}" style="position: relative;">
+		<div class="productCartImg">
+			<img src="{{#if add_to_cart_url}}
+			{{cdn '/assets/img/addcart.png'}}
+			{{else if pre_order "==" true}}
+			{{cdn '/assets/img/addcart.png'}}
+			{{else}}
+			{{cdn '/assets/img/addcart-x.png'}}
+			{{/if}}"/>
+		</div>
+		<div class="productCartSpan">{{#if add_to_cart_url}}Add to Cart{{else if pre_order "==" true}}Pre-Order{{else}}Out of Stock{{/if}}</div>
+		<form id="{{id}}addtocart" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>
+			<input type="hidden" name="action" value="add">
+			<input type="hidden" name="product_id" value="{{id}}"/>
+			<input id="form-action-addToCart" data-wait-message="" class="cartButton {{#if pre_order}}cartPre{{else}}cartAdd{{/if}}" type="submit" value="">
+		</form>
+	</div>
+</div>
+
+<!--- 
+<form class="form" method="post" action="/cart.php" enctype="multipart/form-data" data-cart-item-add>
+			<input id="form-action-addToCart" data-wait-message="Adding..." class="cartButton {{#if pre_order}}cartPre{{else}}cartAdd{{/if}}" type="submit" value="{{#if pre_order}}Pre-Order{{else}}Add to Cart{{/if}}">
+</form>
+--->

@@ -1,0 +1,139 @@
+{{#if selected.items}}
+<div class="filterRemove">
+	{{#each selected.items}}
+	<a href="{{url}}" rel="nofollow"><li>{{title}} <span>&#215;</span></li></a>
+	{{/each}}
+	<a href="{{selected.remove_all_url}}"><li>Clear All<span>&#215;</span></li></a>
+</div>
+{{/if}}
+<div class="leftFilters">
+	{{#each facets}}
+	{{#if title "==" "Arrival Date"}}
+	{{else}}
+	{{#if items.length ">" "1"}}
+	<div id="filter{{#if title "==" "Product Type"}}Type{{else}}{{title}}{{/if}}">
+	<div class="filterHeader" id="filter-header-{{title}}" data-count="{{items.length}}"><span id="filter-title-{{facet}}">{{title}}</span><div id="" class="filterHeaderTriangle">&#9654;</div></div>
+	<div class="filterBlock">
+		<ul{{#if title "==" "Status"}} id="statusFilter"{{/if}}>
+		{{#each items}}
+			<a href="{{url}}" class="filterline" rel="nofollow"><li><span class="filter-{{#if selected}}selected{{else}}option{{/if}}">{{title}} ({{count}})</span></li></a>
+		{{/each}}
+		</ul>
+	</div>
+	</div>
+	<script>
+	$(".filterline").each(function(i,obj) {
+		if(obj.href.indexOf('+-') > 0){
+			obj.href = obj.href.replace('+-','%2B-');
+		}
+	});
+	</script>
+	{{/if}}
+
+	{{#if title "==" "Filter"}}
+		<script>
+		{{#each (limit items 1)}}
+		var filterTitle = '{{title}}';
+		{{/each}}
+		$("#filter-title-{{facet}}").html(filterTitle.substring(0, filterTitle.indexOf('=')));
+		</script>
+	{{/if}}
+	{{/if}}
+
+	{{#if title "==" "Other"}}
+		<script>
+		var html = '';
+		{{#each items}}
+			html += '<a href="{{url}}" rel="nofollow"><li><span class="filter-{{#if selected}}selected{{else}}option{{/if}}">{{title}} ({{count}})</span></li></a>';
+		{{/each}}
+		//$("#statusFilter").html($("#statusFilter").html() + html);
+		</script>
+	{{/if}}
+
+	{{/each}}
+</div>
+
+<script>
+if(window.location.toString().indexOf("magic-the-gathering") > 0){
+	$("#filterSeries").remove().insertAfter($("#filterFilter"));
+	$(document).ready(fireWhenReady('Series','open'));
+}
+
+$(document).on('click', '.filterHeader', function(){
+	var div = $(this).next();
+	var arrow = $(this).children('div');
+	var facet = $(this).attr('id').replace('filter-header-','');
+
+	if($(div).css('display') == 'block'){
+		$(div).css('display','none');
+		$(arrow).removeClass('filterHeaderTriangle-rotate');
+	} else {
+		$(div).css('display','block');
+		$(arrow).addClass('filterHeaderTriangle-rotate');
+	}
+
+	if($(this).attr('data-count') == "15"){
+		$(div).html('<div class="filterLoading">Loading...</div>');
+		getFilters(facet,'open');
+	}
+});
+
+function fireWhenReady(facet,state) {
+	if(typeof getFilters == 'function'){
+		getFilters(facet,state);
+	} else {
+		setTimeout(function(){fireWhenReady(facet,state);}, 100);
+	}
+}
+
+var showFilter = new Array();
+var filterCount = new Array();
+
+$('#filter-header-Status').trigger('click');
+</script>
+<script>
+$(document).ready(fireWhenReady('Filter','closed'));
+</script>
+
+
+
+<script>
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+var html = document.getElementById('facetedSearch').innerHTML;
+if(getParameterByName('search_query')){
+	html = html.replace(new RegExp(getParameterByName('search_query').replace(/\+/g, "\\+"), 'g'), getParameterByName('search_query').replace(/\+/g, "%2B"));
+}
+document.getElementById('facetedSearch').innerHTML = html;
+
+document.getElementById('min_price').value = getParameterByName('min_price');
+document.getElementById('max_price').value = getParameterByName('max_price');
+</script>
+<script>
+var keywords = document.getElementsByName('keywords')[0].getAttribute('content').split(',');
+var	filterCount   = 0;
+for(i = 0; i < keywords.length; i++){
+	if(keywords[i].substring(0, 6) == 'filter'){
+		filterCount++;
+		filter = keywords[i].substring(6, 100);
+		document.getElementById('filter' + filter).style.display = 'block';
+		//$('#filter-header-' + filter).trigger('click');
+		//$(document).ready(fireWhenReady(keywords[i].substring(6, 100)));
+	}
+}
+if(filterCount == 0){
+//	$(".filterBlock").css('display','block');
+}
+
+for(i = 0; i < showFilter.length; i++){
+	toggleFilters(showFilter[i],filterCount[i])
+}
+</script>

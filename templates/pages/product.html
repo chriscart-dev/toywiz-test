@@ -1,0 +1,37 @@
+---
+cart: true
+blog:
+    recent_posts: null
+shop_by_brand:
+categories:
+    description: false
+product:
+    videos:
+        limit: {{theme_settings.productpage_videos_count}}
+    reviews:
+        limit: {{theme_settings.productpage_reviews_count}}
+    related_products:
+        limit: 24
+    similar_by_views:
+        limit: 24
+---
+{{#partial "page"}}
+<script>var pageType = 'product';</script>
+{{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+{{#each product.shipping_messages}}
+	{{> components/common/alert-info message}}
+{{/each}}
+
+	{{> components/products/product-view schema=true}}
+
+	{{#if product.videos.list.length}}
+		{{> components/products/videos product.videos}}
+	{{/if}}
+
+	{{#if settings.show_product_reviews}}
+		{{> components/products/reviews reviews=product.reviews product=product urls=urls}}
+	{{/if}}
+
+{{/partial}}
+{{> layout/base}}

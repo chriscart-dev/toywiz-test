@@ -1,0 +1,59 @@
+<div class="cartHeader cartItem">
+	<div class="cartImage">PRODUCT</div>
+	<div class="cartProduct">&nbsp;</div>
+	<div class="cartPrice">PRICE</div>
+	<div class="cartQTY">QTY</div>
+	<div class="cartTotal">TOTAL<div class="cartDelete">&nbsp;</div></div>
+</div>
+<style>
+.cartDialog {position: absolute; color: #c30000; margin-top: -50px; z-index: 1000; margin-top: -130px; margin-left: -50px; width: 270px; background: #fff; border: 4px solid #11396a; border-radius: 15px; box-shadow: 0px 0px 20px #000000; padding: 10px; padding-bottom: 20px; display: none; cursor: pointer;}
+.cartDialogButton {padding: 4px; background: #11396a; border-radius: 10px; font-size: 18px; color: #fff; width: 100px; margin-top: 10px;}
+</style>
+
+{{#each cart.items}}
+<div class="cartRow cartItem" data-product="{{id}}" data-sku="{{sku}}">
+	<div class="cartImage"><center><a href="{{url}}"><img src="{{getImage image 'thumb' (cdn ../../theme_settings.default_image_product)}}" alt="{{image.alt}}"/></a></center></div>
+	<div class="cartProduct"><a href="{{url}}">{{name}}</a></div>
+	<div class="cartPrice"><span>{{#if price_discounted}}{{price_discounted.formatted}}{{else}}{{price.formatted}}{{/if}}</span></div>
+	<div class="cartQTY">
+		<div id="qty-{{id}}-dialog" class="cartDialog" onclick="$(this).css('display','none'); $('#qty-{{id}}').select();">
+			Sorry, there are not enough of the requested quantity available.
+			<center><div class="cartDialogButton">OK</div></center>
+		</div>
+	
+		<input type="text" class="form-input--incrementTotal"
+			quantityInputvalue="2"
+			id="qty-{{id}}"
+			name="qty-{{id}}"
+			type="tel"
+			value="{{quantity}}"
+			data-quantity-min="{{min_purchase_quantity}}"
+			data-quantity-max="{{max_purchase_quantity}}"
+			data-quantity-min-error="{{lang 'products.quantity_min' quantity=min_purchase_quantity}}"
+			data-quantity-max-error="{{lang 'products.quantity_max' quantity=max_purchase_quantity}}"
+			data-cart-itemid="{{id}}"
+			data-quantity-update
+			min="1"
+			pattern="[0-9]*"
+			onclick="this.select();"
+			onfocus="window.cartQty = this.value;"
+			aria-live="polite"{{#unless can_modify}} disabled{{/unless}}
+		/><br/>
+ 		<span>update</span>
+	</div>
+	<div class="cartTotal">
+		<span>{{#if total_discounted}}{{total_discounted.formatted}}{{else}}{{total.formatted}}{{/if}}</span>
+		{{# if can_modify}}
+			<div class="cartDelete"></div>
+
+		<a style="display: none;" class="cart-remove icon" data-cart-itemid="{{id}}" href="#" data-confirm-delete="Are you sure you want to remove this item from your cart?">
+			<div class="cartDelete"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAXCAMAAADeH4ToAAAAAXNSR0IArs4c6QAAAHJQTFRFBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmilBmil////dG6szAAAACR0Uk5TAMzS4YZE8EekqvXI+u+4mXvu/PZ4UWxjWoe0pZZuZM6db/f4WB4CZAAAAAFiS0dEJcMByQ8AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfhAhITBhW0+/C3AAAAEGNhTnYAAAATAAAAFwAABhkAAAFr6ohdfwAAAHhJREFUGNPV0UcOgCAQQNGxO3YUu1i5/xlFVGThxqV/x8uESQDgUwaXmbpZtiOy3fvs+YhBiKIwQvS9w+Ik1UrkLM8crYwfRvKCqIqcyAtN+iyj12phZQV1DVWjW9tB30M3/MkaCowBHZVN8/Ms83TasnLVxt4/Zwf8Rw+RLG+1wQAAAShleElmAAgABwESAAMAAAABAAAAAAEaAAUAAAABAAAAYgEbAAUAAAABAAAAagEoAAMAAAABAAIAAAExAAIAAAAeAAAAcgEyAAIAAAAUAAAAkIdpAAQAAAABAAAApAAAANAAAABIAAAAAQAAAEgAAAABQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykAMjAxNzowMjoxNiAxMTo1MDoxNAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAHCKADAAQAAAABAAADtQAAAAAAAAAGAQMAAwAAAAEABgAAARoABQAAAAEAAAEeARsABQAAAAEAAAEmASgAAwAAAAEAAgAAAgEABAAAAAEAAAEuAgIABAAAAAEAAAAAAAAAAAAAAEgAAAABAAAASAAAAAHdXkBqAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTAyLTE4VDE5OjA2OjIxKzAxOjAw1MvDBwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0wMi0xOFQxOTowNjoyMSswMTowMKWWe7sAAAApdEVYdGRjOmZvcm1hdABhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9w5K2fVAAAADh0RVh0aWNjOmNvcHlyaWdodABDb3B5cmlnaHQgKGMpIDE5OTggSGV3bGV0dC1QYWNrYXJkIENvbXBhbnn5V3k3AAAAIXRFWHRpY2M6ZGVzY3JpcHRpb24Ac1JHQiBJRUM2MTk2Ni0yLjFXrdpHAAAAJnRFWHRpY2M6bWFudWZhY3R1cmVyAElFQyBodHRwOi8vd3d3LmllYy5jaBx/AEwAAAA3dEVYdGljYzptb2RlbABJRUMgNjE5NjYtMi4xIERlZmF1bHQgUkdCIGNvbG91ciBzcGFjZSAtIHNSR0JEU0ipAAAADXRFWHRsYWJlbABGb3JtYSAxg1ASiwAAABV0RVh0cGhvdG9zaG9wOkNvbG9yTW9kZQAzVgKzQAAAACZ0RVh0cGhvdG9zaG9wOklDQ1Byb2ZpbGUAc1JHQiBJRUM2MTk2Ni0yLjEcL2wLAAAAE3RFWHR0aWZmOlhSZXNvbHV0aW9uADcyDlBxhQAAABN0RVh0dGlmZjpZUmVzb2x1dGlvbgA3MpNfkPMAAAAodEVYdHhtcDpDcmVhdGVEYXRlADIwMTItMDYtMjBUMjI6MDQ6MTUtMDU6MDAjPCpEAAAALXRFWHR4bXA6Q3JlYXRvclRvb2wAQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cyl97wykAAAAKnRFWHR4bXA6TWV0YWRhdGFEYXRlADIwMTctMDItMTZUMTE6NTA6MTQrMDU6MDDAtSAFAAAAKHRFWHR4bXA6TW9kaWZ5RGF0ZQAyMDE3LTAyLTE2VDExOjUwOjE0KzA1OjAw/BFzuwAAADp0RVh0eG1wTU06RGVyaXZlZEZyb20AeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQoML4sgAAAA5dEVYdHhtcE1NOkRvY3VtZW50SUQAeG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOERCQjhGNzExQzI0RkZBQgjg8RAAAAA5dEVYdHhtcE1NOkluc3RhbmNlSUQAeG1wLmlpZDo0Njg0QkY2OTEyRjRFNjExOEMyMEZCNDREM0I0NDQwN0F/rboAAABBdEVYdHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRAB4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4REJCOEY3MTFDMjRGRkFCoRrT0AAAAABJRU5ErkJggg=="/></div>
+		</a><br/>
+		<span class="cartdeleteLink"><a class="cart-remove icon" data-cart-itemid="{{id}}" href="#" data-confirm-delete="Are you sure you want to remove this item from your cart?">remove</a></span>
+		{{/if}}
+	
+	</div>
+	<div class="linebreak1">&nbsp;</div>
+</div>
+{{/each}}
+<p data-cart-quantity="{{cart.quantity}}" style="display: none;">{{lang 'cart.added_to_cart.your_cart_contains' num_products=cart.quantity}}</p>

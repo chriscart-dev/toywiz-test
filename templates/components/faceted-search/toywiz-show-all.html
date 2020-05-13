@@ -1,0 +1,25 @@
+{{#each facets}}
+	{{#if facet "==" ../all_facets}}
+	<ul id="facetedSearch-navList--{{ facet }}" class="navList" data-facet="{{facet}}"">
+		{{#each items}}
+			<li class="navList-item">
+				<a
+					href="{{url}}"
+					class="navList-action navList-action--checkbox {{#if selected }} is-selected {{/if}} {{#if has_sub_categories }} has-children {{/if}}"
+					data-id="{{ id }}"
+					data-faceted-search-facet rel="nofollow">
+					{{ title }}
+					{{#if ../show_product_counts}}
+						{{#if count}}
+							<span>({{ count }})</span>
+						{{/if}}
+					{{/if}}
+				</a>
+				{{#if children}}
+					{{> components/faceted-search/facets/hierarchy-children children}}
+				{{/if}}
+			</li>
+		{{/each}}
+	</ul>
+	{{/if}}
+{{/each}}

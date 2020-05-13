@@ -1,0 +1,5 @@
+<div class="cartTop">
+	<a href="{{urls.home}}"><div class="cartNavButton cartNavButtonContinue">< Continue Shopping</div></a>
+	<div class="sectionTitle cartTitle cartYourCart">YOUR SHOPPING CART</div>
+	{{#if cart.items}}<a href="{{urls.checkout.single_address}}"><div class="cartNavButton">Checkout ></div></a>{{/if}}
+</div>

@@ -1,0 +1,36 @@
+<script>window.breadcrumbsHTML = '';</script>
+<ul class="breadcrumbs" id="breadcrumbs">
+    {{#each breadcrumbs}}
+		{{#if ../product.id ">" 0}}
+			{{#unless @last}}
+				<li{{#unless @first}} class="breadcrumbsInner"{{/unless}}><a href="{{url}}">{{name}}</a></li>
+				{{#if name "==" "Featured Products"}}
+				{{else}}
+				<script>window.breadcrumbsHTML += '<li><a href="{{url}}">{{name}}</a></li>';</script>
+				{{/if}}
+			{{/unless}}			
+		{{else}}
+			<li{{#unless @first}} class="breadcrumbsInner"{{/unless}}><a href="{{url}}">{{name}}</a></li>
+		{{/if}}
+    {{/each}}
+</ul>
+{{#each (limit breadcrumbs 2)}}
+{{#if @last}}
+	{{#if name "==" "Featured Products"}}
+		<script>
+		var html = window.breadcrumbsHTML;
+		html = html.replace('Featured ','');
+		html = html.replace('featured-products/featured-','');
+		$("#breadcrumbs").html(html);</script>
+	{{/if}}
+	{{#if name "==" "Flyout Products"}}
+		<script>$("#breadcrumbs").html('&nbsp;');</script>
+	{{/if}}
+{{/if}}
+{{/each}}
+<script>
+var html = $("#breadcrumbs").html();
+if(html.indexOf('""') > 0){
+	$("#breadcrumbs").html(html.replace('""','"' + window.location.pathname + '"'));
+}
+</script>

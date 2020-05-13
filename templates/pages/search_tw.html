@@ -1,0 +1,163 @@
+---
+product_results:
+    limit: 100
+---
+{{inject 'categoryTree' forms.search.category_options}}
+{{inject 'searchProductsPerPage' 100}}
+{{#partial "head"}}
+    {{#if pagination.product_results.previous}}
+        <link rel="prev" href="{{pagination.product_results.previous}}">
+    {{/if}}
+    {{#if pagination.product_results.next}}
+        <link rel="next" href="{{pagination.product_results.next}}">
+    {{/if}}
+{{/partial}}
+
+{{#partial "page"}}
+{{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+{{{snippet 'search'}}}
+
+<script>
+var brands = "|{{#each forms.search.brands_list}}{{name}}|{{/each}}";
+brands = brands.toLowerCase();
+var search = "{{forms.search.query}}";
+search = search.replace('+-search','');
+if(search == 'yu-gi-oh'){search = 'yugioh';}
+var ct	= {{pagination.product_results.total}};
+//document.write(search + ' ' + ct + ' ' + brands);
+if(brands.indexOf('|' + search + '|') > 0 && ct > 200){
+//	window.location = search;
+}
+</script>
+
+
+<script>
+{{#if result_count "==" "0"}}
+var string = window.location.href;
+if(string.indexOf('in_stock=1') > 0){
+	string = string.replace('in_stock=1','in_stock=0');
+	window.open(string,"_self")
+}
+{{/if}}
+var pageType = 'Search';
+
+</script>
+
+<script>
+{{#each category_results}}
+{{#each this}}
+if("{{name}}".toLowerCase() == search.toLowerCase()){window.location = '{{url}}';}
+{{/each}}
+{{/each}}
+</script>
+
+
+
+<section class="page">
+{{#if product_results.products}}
+	<div class="leftSidebar">
+		<div id="searchLogo"></div>
+		<div class="leftSearch" onclick="showFilters('all');">
+			<span class="mobileOnly hideFilters">HIDE FILTERS</span>
+			<span class="mobileOnly showFilters">SHOW FILTERS</span>
+			<span class="mobileHide">FILTER BY:</span>
+		</div>
+		{{> components/faceted-search/index product_results}}
+	</div>
+	<div class="section">
+		<div id="searchHeader" class="sectionTitle">{{lang 'search.results.count' count=../pagination.product_results.total search_query=forms.search.query}}</div>
+		<script>
+			var html = document.getElementById('searchHeader').innerHTML;
+			html	= html.replace(/\+/g, " ");
+			html	= html.replace(/\"/g, "");
+			html	= html.replace(/\'/g, "' ");
+			html	= html.replace(/(?:^|\s)\w/g, function(match) {return match.toUpperCase();});
+			html	= html.replace(/\' /g, "'");
+			html	= html.replace('Results For','results for');
+			html	= html.replace('for \'', 'for <span class="goldOther">\'');
+			html	= html.replace(' -search', '');
+			html	+= '</span>';
+			document.getElementById('searchHeader').innerHTML = html;
+		</script>
+		{{#each product_results.facets}}
+			{{#if facet "==" "bool"}}
+				{{#each items}}
+					{{#if id "==" "in_stock"}}
+						<a id="oosLink" href="{{url}}"><div id="oosSearchButton" class="productsSort">
+						{{#if selected "==" true}}
+							Show out of stock items
+						{{else}}
+							Hide out of stock items
+						{{/if}}
+						</div></a>
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		{{/each}}
+		{{> components/search/product-listing}}
+
+		<script>
+		var theSearch = '+' + $("#oosLink").attr("href");
+		theSearch = theSearch.split('+').join('%2B');
+		if(theSearch.substring(0, 3) == '%2B'){
+			theSearch = theSearch.substring(3, 1000);
+		}
+		 $("#oosLink").attr("href",theSearch)
+
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, "\\$&");
+			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
+
+		var master = getParameterByName('master');
+		for(i = 0; i < categories.length; i++){
+			if(categories[i].name == master){
+				var html = '<center><a href="' + categories[i].url + '"><img src="' + categories[i].image.replace('{:size}','600x600') + '"/></a></center>';
+				$("#searchLogo").html(html);
+			}
+		}
+		</script>
+{{else}}
+	<div class="search-suggestion" style="display: none;">
+		{{{lang 'forms.search.did_you_mean' suggestion=forms.search.suggested_query.query}}}
+		<a href="{{forms.search.suggested_query.url}}" class="search-refine" rel="nofollow">{{lang 'forms.search.refine'}}</a>
+	</div>
+	<div class="search-suggestion">
+		<p>No matches found.</p>
+	</div>
+	{{#if result_count '===' 0}}
+	<div class="search-suggestion">
+		<h5 class="suggestion-title">{{lang 'forms.search.suggestions.title'}}</h5>
+		<ul>
+			<li>{{lang 'forms.search.suggestions.line1'}}</li>
+			<li>{{lang 'forms.search.suggestions.line2'}}</li>
+			<li>{{lang 'forms.search.suggestions.line3'}}</li>
+		</ul>
+	</div>
+	{{/if}}
+	</div>
+{{/if}}
+</div>
+</section>
+<script>
+var searchValue = '{{forms.search.query}}';
+searchValue	= searchValue.replace(/\+/g, " ");
+searchValue	= searchValue.replace(/\&quot;/g, '"');
+searchValue = searchValue.replace(' -search','');
+document.getElementById('search_query_new').value = searchValue;
+
+if(searchValue.indexOf('New Arrivals') > 0){
+	$(".dateArrived").each(function(){
+		var html = $(this).html();
+		$(this).html('Arrived ' + parseInt(html.substring(5, 7)) + '/' + parseInt(html.substring(8, 10)));
+	})
+	$(".dateArrived").css('display','block');
+}
+</script>
+{{/partial}}
+{{> layout/base searchpage="Y"}}
