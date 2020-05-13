@@ -5,7 +5,7 @@ import 'jquery-migrate';
 import Global from './theme/global';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Checkout from './checkout-app/Checkout/checkout';
+import Checkout from './checkout-app/Checkout/index';
 
 const getAccount = () => import('./theme/account');
 const getLogin = () => import('./theme/auth');
@@ -34,6 +34,7 @@ const pageClasses = {
     cart: () => import('./theme/cart'),
     category: () => import('./theme/category'),
     compare: () => import('./theme/compare'),
+    checkout: ()=> import('./checkout-app/index'),
     page_contact_form: () => import('./theme/contact-us'),
     error: () => import('./theme/errors'),
     404: () => import('./theme/404-error'),
