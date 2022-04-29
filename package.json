@@ -8,7 +8,7 @@
   "devDependencies": {
     "@bigcommerce/citadel": "^2.11.5",
     "@bigcommerce/stencil-utils": "1.0.5",
-    "async": "^1.5.2",
+    "async": "^2.6.4",
     "babel-core": "6.7.4",
     "babel-eslint": "4.1.0",
     "babel-loader": "6.2.4",
