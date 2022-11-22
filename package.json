@@ -29,7 +29,7 @@
     "jquery": "^2.2.1",
     "jquery-zoom": "^1.7.15",
     "jstree": "vakata/jstree",
-    "karma": "^0.13.22",
+    "karma": "^6.4.1",
     "karma-babel-preprocessor": "6.0.1",
     "karma-coverage": "0.2.7",
     "karma-es6-shim": "0.2.3",
